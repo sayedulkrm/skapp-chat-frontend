@@ -1,0 +1,92 @@
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+import { server } from "../../backend";
+
+interface MyKnownError {
+    message: string;
+}
+
+interface IRFromData {
+    name: string;
+    email: string;
+    password?: string;
+    avatar?: any;
+}
+
+interface ILFromData {
+    email: string;
+    password?: string;
+}
+
+export const userLogin = createAsyncThunk<
+    any,
+    ILFromData,
+    {
+        rejectValue: MyKnownError;
+    }
+>("user/login", async (formData, { rejectWithValue }) => {
+    console.log("login: ", formData);
+
+    try {
+        const { data } = await axios.post(`${server}/user/login`, formData);
+
+        console.log(data);
+        return data;
+    } catch (error: any) {
+        return rejectWithValue((error.response.data ?? error) as MyKnownError);
+    }
+});
+
+export const userRegister = createAsyncThunk<
+    any,
+    IRFromData,
+    { rejectValue: MyKnownError }
+>("user/register", async (formData, { rejectWithValue }) => {
+    try {
+        const { data } = await axios.post(`${server}/user/register`, formData, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            withCredentials: true,
+        });
+
+        console.log(data);
+        return data;
+    } catch (error: any) {
+        console.log(error);
+
+        return rejectWithValue((error.response.data ?? error) as MyKnownError);
+    }
+});
+
+interface IActivateUser {
+    activation_token: string;
+    activation_code: string;
+}
+
+export const activateUser = createAsyncThunk<
+    any,
+    IActivateUser,
+    { rejectValue: MyKnownError }
+>("user/activate", async (tokenData, { rejectWithValue }) => {
+    console.log(tokenData);
+
+    try {
+        const { data } = await axios.post(
+            `${server}/user/activate`,
+            tokenData,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                withCredentials: true,
+            }
+        );
+
+        console.log(data);
+        return data;
+    } catch (error: any) {
+        console.log(error);
+        return rejectWithValue((error.response.data ?? error) as MyKnownError);
+    }
+});
