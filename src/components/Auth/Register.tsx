@@ -30,6 +30,14 @@ const Register: FC = () => {
             return toast.error("Confirmation Password is incorrect");
         }
 
+        // Regular expression to allow only letters and numbers
+        const nameRegex = /^[a-zA-Z0-9\s]*$/;
+
+        // Check if the name contains any characters other than letters and numbers
+        if (!nameRegex.test(name)) {
+            return toast.error("Name can only contain letters and numbers");
+        }
+
         const data = {
             name,
             email,
@@ -81,7 +89,7 @@ const Register: FC = () => {
     return (
         <div className="min-h-screen  flex flex-col justify-center sm:py-12">
             <div className="p-10 xs:p-0 mx-auto md:w-full md:max-w-md">
-                <div className=" shadow w-full rounded-lg divide-y divide-gray-200">
+                <div className=" shadow-md p-3 w-full rounded-lg divide-y divide-gray-200">
                     <div className="px-5 py-7">
                         <h3 className="text-2xl font-semibold">Register</h3>
 
@@ -117,7 +125,7 @@ const Register: FC = () => {
                                     htmlFor="name"
                                     className="block mb-2 text-sm "
                                 >
-                                    Full Name
+                                    User Name
                                 </label>
                                 <input
                                     type="text"

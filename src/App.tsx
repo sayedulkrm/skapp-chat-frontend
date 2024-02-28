@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
@@ -7,6 +7,10 @@ import "react-toastify/dist/ReactToastify.css";
 import Verification from "./components/Auth/Verification";
 import Home from "./components/Pages/Home/Home";
 import Navbar from "./components/Layout/Navbar/Navbar";
+import Title from "./components/Shared/Title";
+
+const Chat = lazy(() => import("./components/Pages/Chat/Chat"));
+const Groups = lazy(() => import("./components/Pages/Groups/Groups"));
 
 const App = () => {
     const initialTheme = localStorage.getItem("theme") || "light";
@@ -25,18 +29,28 @@ const App = () => {
     console.log(setTheme);
 
     return (
-        <div className="h-full w-full relative  dark:text-[#fff] text-[#000] bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-400 dark:bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] dark:from-gray-700 dark:via-gray-900 dark:to-black">
-            <Navbar />
+        <>
+            <Title />
 
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/verify" element={<Verification />} />
-            </Routes>
+            <div className="h-full w-full relative  dark:text-[#fff] text-[#000] bg-white dark:bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] dark:from-gray-700 dark:via-gray-900 dark:to-black">
+                <Navbar />
 
-            <ToastContainer />
-        </div>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/verify" element={<Verification />} />
+
+                    {/* ============================================= */}
+
+                    <Route path="/chat" element={<Chat />} />
+                    <Route path="/chat/:chatId" element={<Chat />} />
+                    <Route path="/groups" element={<Groups />} />
+                </Routes>
+
+                <ToastContainer />
+            </div>
+        </>
     );
 };
 

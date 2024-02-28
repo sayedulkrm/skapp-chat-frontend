@@ -55,7 +55,7 @@ const Login: FC = () => {
     return (
         <div className="min-h-screen  flex flex-col justify-center sm:py-12">
             <div className="p-10 xs:p-0 mx-auto md:w-full md:max-w-md">
-                <div className=" shadow w-full rounded-lg divide-y divide-gray-200">
+                <div className=" shadow-md p-3 w-full rounded-lg divide-y divide-gray-200">
                     <div className="px-5 py-7">
                         <h3 className="text-2xl font-semibold">Login</h3>
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { FiSun, FiMoon, FiLogIn } from "react-icons/fi";
+import { FiSun, FiMoon } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
     const initialTheme = localStorage.getItem("theme") || "light";
@@ -22,9 +23,9 @@ const Navbar = () => {
     return (
         <nav className="bg-white dark:bg-gray-800 p-4 flex justify-between items-center ">
             {/* Logo */}
-            <div className="flex items-center">
+            <Link to={"/"} className="flex items-center">
                 <h1 className="text-2xl font-semibold">skapp</h1>
-            </div>
+            </Link>
 
             {/* Right side buttons */}
             <div className="flex items-center">
@@ -39,10 +40,12 @@ const Navbar = () => {
                 </button>
 
                 {/* Login button */}
-                <button className="flex justify-center items-center gap-5 border border-black dark:border-white px-4 py-2 rounded-md hover:bg-white hover:text-gray-800">
-                    <FiLogIn className="w-6 h-6 mr-1" />
+                <Link
+                    to={"/login"}
+                    className="flex justify-center items-center gap-5 border border-black dark:border-white px-4 py-2 rounded-md hover:bg-white hover:text-gray-800"
+                >
                     Login
-                </button>
+                </Link>
             </div>
         </nav>
     );

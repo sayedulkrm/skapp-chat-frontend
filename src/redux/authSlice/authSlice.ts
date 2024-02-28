@@ -11,7 +11,7 @@ interface IAuthState {
 
 const initialState: IAuthState = {
     isAuthLoading: false,
-    user: null,
+    user: true, //by default undefined
     userActivationToken: "",
     authMessage: null,
     authError: null,
