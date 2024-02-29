@@ -5,9 +5,18 @@ import Title from "../../Shared/Title";
 import AuthNavbar from "../Navbar/AuthNavbar";
 // import InboxSkeleton from "../Loader/Skeleton/InboxSkeleton";
 import InboxList from "../../Pages/Chat/InboxList/InboxList";
+import { useParams } from "react-router-dom";
+import ProfileView from "../../Pages/Chat/ProfileView/ProfileView";
 
 const AppLayout = () => (WrappedComponent: any) => {
     return (props: any) => {
+        const params = useParams();
+
+        const chatId = params.chatId;
+
+        console.log(chatId);
+        // Have to sent the id to redux
+
         return (
             <div className="w-full h-full ">
                 <Title />
@@ -42,6 +51,7 @@ const AppLayout = () => (WrappedComponent: any) => {
                     </div>
                 </div>
                 {/* Footer */}
+                <ProfileView />
             </div>
         );
     };
