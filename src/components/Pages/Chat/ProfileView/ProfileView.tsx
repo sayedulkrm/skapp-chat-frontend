@@ -1,5 +1,4 @@
 import { IoCloseSharp } from "react-icons/io5";
-import AvatarGroup from "../InboxList/AvatarGroup";
 import moment from "moment";
 
 const ProfileView = () => {
@@ -14,13 +13,13 @@ const ProfileView = () => {
         isOnline: true,
     };
 
-    const isCartBoxOpen = true;
+    const isProfileBoxOpen = false;
 
     return (
-        <main
+        <div
             className={
                 " fixed overflow-hidden z-10 bg-gray-900 bg-opacity-70 inset-0 transform ease-in-out" +
-                (isCartBoxOpen
+                (isProfileBoxOpen
                     ? " transition-opacity opacity-100 duration-500 translate-x-0  "
                     : " transition-all delay-500 opacity-0 translate-x-full  ")
             }
@@ -28,7 +27,9 @@ const ProfileView = () => {
             <section
                 className={
                     " w-screen max-w-screen-sm md:max-w-lg right-0 absolute bg-gray-400 dark:bg-slate-800 h-full shadow-xl delay-400 duration-500 ease-in-out overflow-auto transition-all transform rounded-xl md:rounded-none rounded-l-none md:rounded-l-2xl " +
-                    (isCartBoxOpen ? " translate-x-0 " : " translate-x-full ")
+                    (isProfileBoxOpen
+                        ? " translate-x-0 "
+                        : " translate-x-full ")
                 }
             >
                 <div className="w-full h-auto flex justify-start items-start p-5">
@@ -94,7 +95,7 @@ const ProfileView = () => {
                 className=" w-screen h-full  cursor-pointer "
                 // onClick={() => dispatch(closeCartBox())}
             ></section>
-        </main>
+        </div>
     );
 };
 

@@ -9,11 +9,17 @@ import {
 } from "react-icons/fi";
 // import { Link } from "react-router-dom";
 import { IoMdPerson, IoMdPersonAdd, IoMdSettings } from "react-icons/io";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+import { setSearchModal } from "../../../redux/navbarSlice/navbarSlice";
+import SearchModals from "./Modals/SearchModals";
 
 const AuthNavbar = () => {
     const initialTheme = localStorage.getItem("theme") || "light";
     const [theme, setTheme] = useState(initialTheme);
+
+    const dispatch = useDispatch();
 
     const [profileButton, setProfileButton] = useState(false);
     const [notification, setNotification] = useState(false);
@@ -25,7 +31,7 @@ const AuthNavbar = () => {
     };
 
     const openSearchModal = () => {
-        console.log("Open search modal");
+        dispatch(setSearchModal(true));
     };
 
     const navigateToGroup = () => {
@@ -88,12 +94,16 @@ const AuthNavbar = () => {
                 </button>
 
                 {/* Search button */}
-                <button
-                    className="mr-4 flex items-center gap-1 border p-1 md:p-2 rounded-md"
-                    onClick={openSearchModal}
-                >
-                    <FiSearch className="h-3 w-3 md:w-6 md:h-6" />
-                </button>
+                <div className="mr-4 relative">
+                    <button
+                        className=" flex items-center gap-1 border p-1 md:p-2 rounded-md relative"
+                        onClick={openSearchModal}
+                    >
+                        <FiSearch className="h-3 w-3 md:w-6 md:h-6" />
+                    </button>
+
+                    <SearchModals />
+                </div>
 
                 {/* Friend Requests button */}
                 <button

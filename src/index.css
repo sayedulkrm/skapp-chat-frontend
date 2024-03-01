@@ -10,3 +10,19 @@
     text-decoration: none;
     outline: none;
 }
+
+/* Scoll bar hidden */
+
+.scrollhost::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollhost ::-moz-scrollbar {
+    display: none;
+}
+
+.scrollhost {
+    overflow: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: 0px; /*just hides the scrollbar for firefox */
+}

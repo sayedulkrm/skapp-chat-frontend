@@ -10,6 +10,10 @@ const InboxList = () => {
                 avatar: [
                     "https://pikwizard.com/pw/small/efd4c9d04f7a3555c1bb8699869ace60.jpg",
                     "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
+                    "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
+                    "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
+                    "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
+                    "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
                 ],
                 name: "John Doe",
                 lastMessage: "Hello, How are you?",
@@ -57,7 +61,7 @@ const InboxList = () => {
                             }
                         >
                             <div
-                                className={`w-24 flex justify-start items-center rounded-full mr-4 relative `}
+                                className={`min-w-[6rem] flex justify-start items-center rounded-full mr-4 relative `}
                             >
                                 {/* {chat?.avatar?.map((avatar: any, i: number) => (
                                     <div className="">
