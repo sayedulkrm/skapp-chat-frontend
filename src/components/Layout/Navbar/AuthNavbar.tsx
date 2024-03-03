@@ -8,21 +8,32 @@ import {
     FiLogOut,
 } from "react-icons/fi";
 // import { Link } from "react-router-dom";
-import { IoMdPerson, IoMdPersonAdd, IoMdSettings } from "react-icons/io";
-import { useDispatch } from "react-redux";
+import { IoMdPerson, IoMdSettings } from "react-icons/io";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { setSearchModal } from "../../../redux/navbarSlice/navbarSlice";
+import { FaPeopleGroup } from "react-icons/fa6";
+
+import {
+    setNewGroupModal,
+    setNotificationModal,
+    setSearchModal,
+} from "../../../redux/navbarSlice/navbarSlice";
 import SearchModals from "./Modals/SearchModals";
+import { RootState } from "../../../redux/store";
+import NotificationModals from "./Modals/NotificationModals";
+import NewGroupModals from "./Modals/NewGroupModals";
 
 const AuthNavbar = () => {
     const initialTheme = localStorage.getItem("theme") || "light";
     const [theme, setTheme] = useState(initialTheme);
 
     const dispatch = useDispatch();
+    const { notificationModal } = useSelector(
+        (state: RootState) => state.navbar
+    );
 
     const [profileButton, setProfileButton] = useState(false);
-    const [notification, setNotification] = useState(false);
 
     const navigate = useNavigate();
 
@@ -43,7 +54,7 @@ const AuthNavbar = () => {
     };
 
     const openNotificationsBox = () => {
-        setNotification(!notification);
+        dispatch(setNotificationModal(true));
     };
 
     useEffect(() => {
@@ -74,15 +85,7 @@ const AuthNavbar = () => {
                     >
                         <FiBell className="h-3 w-3 md:w-6 md:h-6" />
                     </button>
-                    {notification && (
-                        <div className="z-10  w-60 absolute top-14 right-0 bg-white rounded-md shadow">
-                            <div className="w-full h-full flex justify-start items-center flex-col ">
-                                <div className="hover:bg-gray-400 rounded-md duration-200 w-full flex items-center gap-2 text-black px-4 py-2">
-                                    Profile
-                                </div>
-                            </div>
-                        </div>
-                    )}
+                    {notificationModal && <NotificationModals />}
                 </div>
 
                 {/* Groups button */}
@@ -105,13 +108,17 @@ const AuthNavbar = () => {
                     <SearchModals />
                 </div>
 
-                {/* Friend Requests button */}
-                <button
-                    className="mr-4 flex items-center gap-1 border p-1 md:p-2 rounded-md"
-                    onClick={openSearchModal}
-                >
-                    <IoMdPersonAdd className="h-3 w-3 md:w-6 md:h-6" />
-                </button>
+                {/* New Group button */}
+                <div className="mr-4 relative">
+                    <button
+                        className="mr-4 flex items-center gap-1 border p-1 md:p-2 rounded-md"
+                        onClick={() => dispatch(setNewGroupModal(true))}
+                    >
+                        <FaPeopleGroup className="h-3 w-3 md:w-6 md:h-6" />
+                    </button>
+
+                    <NewGroupModals />
+                </div>
 
                 {/* Theme toggle button */}
                 <button
