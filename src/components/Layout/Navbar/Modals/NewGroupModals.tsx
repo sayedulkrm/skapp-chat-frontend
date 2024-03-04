@@ -1,68 +1,60 @@
 import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../redux/store";
 import {
     setGroupName,
     setNewGroupModal,
+    setNewGroupPeoples,
     setSearchPeople,
 } from "../../../../redux/navbarSlice/navbarSlice";
+import { RootState } from "../../../../redux/store";
 
 const NewGroupModals = () => {
     const dispatch = useDispatch();
 
-    const { newGroupModal, searchPeople, newGroupName } = useSelector(
-        (state: RootState) => state.navbar
-    );
+    const { newGroupModal, searchPeople, newGroupName, newGroupPeoples } =
+        useSelector((state: RootState) => state.navbar);
 
     const users: any = [
         {
-            _id: 124366453,
+            _id: 124353,
             avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
             name: "John Doe",
         },
 
         {
-            _id: 124366453,
+            _id: 124366345453,
             avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
-            name: "John Doe",
+            name: "Jack Doe",
         },
 
         {
-            _id: 124366453,
+            _id: 126678453,
             avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
-            name: "John Doe",
-        },
-
-        {
-            _id: 124366453,
-            avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
-            name: "John Doe",
-        },
-
-        {
-            _id: 124366453,
-            avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
-            name: "John Doe",
-        },
-
-        {
-            _id: 124366453,
-            avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
-            name: "John Doe",
-        },
-
-        {
-            _id: 124366453,
-            avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
-            name: "John Doe",
-        },
-
-        {
-            _id: 124366453,
-            avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
-            name: "John Doe",
+            name: "Sam Doe",
         },
     ];
+
+    const selectMemeberHandler = (user: any) => {
+        dispatch(setNewGroupPeoples(user));
+    };
+
+    // console.log(newGroupPeoples);
+
+    const isUserSelected = (userId: any) => {
+        return newGroupPeoples.some((member) => member._id === userId);
+    };
+
+    // const toggleMemberSelection = (userId : any) => {
+    //     if (newGroupPeoples.includes(userId)) {
+    //       // If already selected, remove it
+    //       dispatch(
+    //         setNewGroupPeoples(newGroupPeoples.filter((id) => id !== userId))
+    //       );
+    //     } else {
+    //       // If not selected, add it
+    //       dispatch(setNewGroupPeoples([...newGroupPeoples, userId]));
+    //     }
+    //   };
 
     // Friend Reqest Handler
 
@@ -157,8 +149,25 @@ const NewGroupModals = () => {
 
                                                     {/* Add friend */}
 
-                                                    <button className="w-16 p-2 rounded-md text-sm bg-cyan-500">
-                                                        Add
+                                                    <button
+                                                        onClick={() =>
+                                                            selectMemeberHandler(
+                                                                user
+                                                            )
+                                                        }
+                                                        className={`w-16 ${
+                                                            isUserSelected(
+                                                                user._id
+                                                            )
+                                                                ? "bg-red-400"
+                                                                : "bg-cyan-500"
+                                                        } p-2 rounded-md text-sm `}
+                                                    >
+                                                        {isUserSelected(
+                                                            user._id
+                                                        )
+                                                            ? "Remove"
+                                                            : "Add"}
                                                     </button>
                                                 </div>
                                             );

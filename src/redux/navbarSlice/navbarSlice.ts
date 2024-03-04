@@ -13,7 +13,7 @@ const initialState = {
 
     // New Group =================================
     newGroupModal: false,
-    newGroupPeoples: [],
+    newGroupPeoples: [] as any[],
     newGroupName: "",
 };
 
@@ -42,7 +42,18 @@ const navbarSlice = createSlice({
         },
 
         setNewGroupPeoples: (state, action) => {
-            state.newGroupPeoples = action.payload;
+            // state.newGroupPeoples = action.payload;
+
+            const existingIndex = state.newGroupPeoples.findIndex(
+                (member) => member._id === action.payload._id
+            );
+            if (existingIndex !== -1) {
+                // If already selected, remove from array
+                state.newGroupPeoples.splice(existingIndex, 1);
+            } else {
+                // If not selected, add to array
+                state.newGroupPeoples.push(action.payload);
+            }
         },
 
         setGroupName: (state, action) => {

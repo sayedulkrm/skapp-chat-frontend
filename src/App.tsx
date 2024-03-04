@@ -11,7 +11,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import GlobalLoader from "./components/Layout/Loader/GlobalLoader";
 
-const Chat = lazy(() => import("./components/Pages/Chat/Chat") as any);
+const Chat = lazy(() => import("./components/Pages/Chat/Chat"));
+const ChatHome = lazy(() => import("./components/Pages/ChatHome/ChatHome"));
 const Groups = lazy(() => import("./components/Pages/Groups/Groups"));
 
 const App = () => {
@@ -41,7 +42,7 @@ const App = () => {
 
                         {/* ============================================= */}
 
-                        <Route path="/chat" element={<Chat />} />
+                        <Route path="/chat" element={<ChatHome />} />
                         <Route path="/chat/:chatId" element={<Chat />} />
                         <Route path="/groups" element={<Groups />} />
                     </Routes>

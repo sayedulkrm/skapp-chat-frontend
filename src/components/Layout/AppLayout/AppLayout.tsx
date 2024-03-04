@@ -27,7 +27,7 @@ const AppLayout = () => (WrappedComponent: any) => {
                     <div className="w-full h-full flex justify-start items-start">
                         {/* chatlish */}
 
-                        <div className="hidden md:block w-1/5 h-full max-h-[92vh]  overflow-y-auto  p-3">
+                        <div className="hidden md:block w-4/12 h-full max-h-[92vh] min-h-[92vh]  overflow-y-auto  p-3 border-r">
                             {/* {Array.from({ length: 10 }).map((_, index) => (
                                 <div key={index} className="w-full h-full">
                                     <InboxSkeleton />
@@ -45,7 +45,7 @@ const AppLayout = () => (WrappedComponent: any) => {
                         </button>
 
                         {/* Chatpage */}
-                        <div className="w-full md:w-4/5 h-full  p-3">
+                        <div className="w-full md:w-8/12 h-full min-h-[92vh]  p-3 dark:bg-slate-950 bg-gray-200">
                             <WrappedComponent {...props} />
                         </div>
                     </div>

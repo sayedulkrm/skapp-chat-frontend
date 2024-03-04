@@ -23,7 +23,7 @@ const InboxList = () => {
                 sameSender: false,
             },
         ],
-        chatId: "",
+        chatId: "543",
         onlineUsers: [],
         newMessagesAleart: [
             {
@@ -84,9 +84,11 @@ const InboxList = () => {
                             </div>
 
                             <div className="flex-1 ">
-                                <div className="mb-2 text-lg">{chat?.name}</div>
+                                <div className="mb-2 text-base line-clamp-1">
+                                    {chat?.name}
+                                </div>
 
-                                <div className=" text-sm">
+                                <div className=" text-sm line-clamp-1">
                                     {chat?.lastMessage}
                                 </div>
                             </div>

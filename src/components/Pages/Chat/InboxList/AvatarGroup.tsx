@@ -7,8 +7,16 @@ interface IAvatarGroup {
 
 const AvatarGroup: React.FC<IAvatarGroup> = ({ avatars, isOnline }) => {
     return (
-        <div className="flex items-center justify-end flex-row-reverse">
-            {avatars.slice(0, 4).map((avatar: any, index: number) => (
+        <div className="w-full flex items-center justify-end flex-row-reverse relative">
+            {avatars.length > 2 && (
+                <div className="absolute top-0 right-0  ">
+                    <div className="h-12 w-12  flex items-center justify-center rounded-full bg-gray-400 text-white text-lg font-semibold">
+                        +{avatars.length - 2}
+                    </div>
+                </div>
+            )}
+
+            {avatars.slice(0, 2).map((avatar: any, index: number) => (
                 <div
                     key={index}
                     className={`relative flex-shrink-0 ${
@@ -19,7 +27,7 @@ const AvatarGroup: React.FC<IAvatarGroup> = ({ avatars, isOnline }) => {
                         src={avatar}
                         alt="Avatar"
                         className={` h-12 w-12 object-cover rounded-full border-2 border-cyan-400 ${
-                            index !== 0 ? "relative z-[1]" : ""
+                            index !== 0 ? "relative z-[4]" : "z-[2]"
                         }`}
                     />
                     {index === 0 && isOnline && (
@@ -27,13 +35,6 @@ const AvatarGroup: React.FC<IAvatarGroup> = ({ avatars, isOnline }) => {
                     )}
                 </div>
             ))}
-            {avatars.length > 4 && (
-                <div className="relative -mr-2">
-                    <div className="h-12 w-12 flex items-center justify-center rounded-full bg-gray-400 text-white text-lg font-semibold">
-                        +{avatars.length - 4}
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

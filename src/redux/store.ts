@@ -1,11 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authSliceReducer from "./authSlice/authSlice";
 import navbarSliceReducer from "./navbarSlice/navbarSlice";
+import chatSliceReducer from "./chatSlice/chatSlice";
 
 const store = configureStore({
     reducer: {
+        // Login, Register etc
         auth: authSliceReducer,
+        // Auth navbar
         navbar: navbarSliceReducer,
+
+        // Chat, Attachments etc
+
+        chat: chatSliceReducer,
     },
 });
 
