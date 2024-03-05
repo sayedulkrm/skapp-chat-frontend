@@ -1,10 +1,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { Navigate, Outlet } from "react-router-dom";
 import { RootState } from "../../redux/store";
-import { Outlet, redirect } from "react-router-dom";
 
 interface IProtectedRoutes {
-    // isAdmin?: boolean;
+    isAdmin?: boolean;
     isAdminRoutes?: boolean;
     children: any;
     isAuthenticatedRoutes?: boolean;
@@ -14,6 +14,8 @@ const ProtectedRoutes: React.FC<IProtectedRoutes> = ({
     children,
     isAuthenticatedRoutes,
     sendToRoutes,
+    isAdmin,
+    isAdminRoutes,
 }) => {
     const { isAuthLoading, user } = useSelector(
         (state: RootState) => state.auth
@@ -24,12 +26,20 @@ const ProtectedRoutes: React.FC<IProtectedRoutes> = ({
     }
 
     if (isAuthenticatedRoutes && !user) {
-        return redirect(sendToRoutes ?? "/login");
+        return <Navigate to={sendToRoutes ?? "/login"} />;
     }
 
     if (!isAuthenticatedRoutes && user) {
-        return redirect(sendToRoutes ?? "/profile");
+        return <Navigate to={sendToRoutes ?? "/asd"} />;
     }
+
+    if (!isAdmin && isAdminRoutes) {
+        return <Navigate to={sendToRoutes ?? "/chat"} />;
+    }
+
+    // if (isAdmin && isAdminRoutes) {
+    //     return <Navigate to={sendToRoutes ?? "/admin/dashboard"} />;
+    // }
 
     return children ? children : <Outlet />;
 };

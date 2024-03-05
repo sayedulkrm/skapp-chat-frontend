@@ -10,13 +10,21 @@ import Title from "./components/Shared/Title";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import GlobalLoader from "./components/Layout/Loader/GlobalLoader";
+import ProtectedRoutes from "./components/Routes/ProtectedRoutes";
 
 const Chat = lazy(() => import("./components/Pages/Chat/Chat"));
 const ChatHome = lazy(() => import("./components/Pages/ChatHome/ChatHome"));
 const Groups = lazy(() => import("./components/Pages/Groups/Groups"));
 
+// Admin
+
+const AdminLogin = lazy(() => import("./components/Pages/Admin/AdminLogin"));
+const AdminDashboard = lazy(() => import("./components/Pages/Admin/Dashboard"));
+
 const App = () => {
     const initialTheme = localStorage.getItem("theme") || "light";
+
+    const isAdminThere = true;
 
     useEffect(() => {
         if (initialTheme === "dark") {
@@ -45,6 +53,33 @@ const App = () => {
                         <Route path="/chat" element={<ChatHome />} />
                         <Route path="/chat/:chatId" element={<Chat />} />
                         <Route path="/groups" element={<Groups />} />
+
+                        {/* Admin */}
+
+                        <Route
+                            path="/admin"
+                            element={
+                                <ProtectedRoutes
+                                    isAdmin={isAdminThere}
+                                    isAdminRoutes={true}
+                                    isAuthenticatedRoutes={true} // Set the value of isAuthenticatedRoutes explicitly
+                                >
+                                    <AdminLogin />
+                                </ProtectedRoutes>
+                            }
+                        />
+                        <Route
+                            path="/admin/dashboard"
+                            element={
+                                <ProtectedRoutes
+                                    isAdmin={isAdminThere}
+                                    isAdminRoutes={true}
+                                    isAuthenticatedRoutes={true} // Set the value of isAuthenticatedRoutes explicitly
+                                >
+                                    <AdminDashboard />
+                                </ProtectedRoutes>
+                            }
+                        />
                     </Routes>
                 </Suspense>
 

@@ -1,5 +1,6 @@
 import { Link, useSearchParams } from "react-router-dom";
 import AvatarGroup from "../Chat/InboxList/AvatarGroup";
+import { memo } from "react";
 
 const GroupsList = () => {
     const chatId = useSearchParams()[0].get("group");
@@ -18,6 +19,24 @@ const GroupsList = () => {
                 "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
             ],
             name: "My group",
+            lastMessage: "Hello, How are you?",
+            groupChat: false,
+            members: ["234", "432"],
+            isOnline: true,
+            sameSender: false,
+        },
+
+        {
+            _id: 14522,
+            avatar: [
+                "https://pikwizard.com/pw/small/efd4c9d04f7a3555c1bb8699869ace60.jpg",
+                "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
+                "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
+                "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
+                "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
+                "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
+            ],
+            name: "Not my group",
             lastMessage: "Hello, How are you?",
             groupChat: false,
             members: ["234", "432"],
@@ -45,19 +64,19 @@ const GroupsList = () => {
     );
 };
 
-const GroupListItem = ({ group, chatId }: any) => {
+const GroupListItem = memo(({ group, chatId }: any) => {
     const { name, avatar, _id } = group;
 
-    console.log("am from listitem", chatId);
+    // console.log("am from listitem", chatId);
 
     return (
         <Link
-            to={`?group=${_id}`}
             onClick={(e) => {
                 if (chatId === _id) {
-                    return e.preventDefault();
+                    e.preventDefault();
                 }
             }}
+            to={`?group=${_id}`}
             className="w-full  flex justify-center items-center py-4 border-b border-gray-200 dark:border-gray-700"
         >
             <div
@@ -75,6 +94,6 @@ const GroupListItem = ({ group, chatId }: any) => {
             </div>
         </Link>
     );
-};
+});
 
 export default GroupsList;
