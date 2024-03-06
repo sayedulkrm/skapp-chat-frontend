@@ -20,6 +20,15 @@ const Groups = lazy(() => import("./components/Pages/Groups/Groups"));
 
 const AdminLogin = lazy(() => import("./components/Pages/Admin/AdminLogin"));
 const AdminDashboard = lazy(() => import("./components/Pages/Admin/Dashboard"));
+const AdminUserManagement = lazy(
+    () => import("./components/Pages/Admin/UserManagement")
+);
+const AdminChatManagement = lazy(
+    () => import("./components/Pages/Admin/ChatManagment")
+);
+const AdminMessageManagement = lazy(
+    () => import("./components/Pages/Admin/MessageManagement")
+);
 
 const App = () => {
     const initialTheme = localStorage.getItem("theme") || "light";
@@ -77,6 +86,45 @@ const App = () => {
                                     isAuthenticatedRoutes={true} // Set the value of isAuthenticatedRoutes explicitly
                                 >
                                     <AdminDashboard />
+                                </ProtectedRoutes>
+                            }
+                        />
+
+                        <Route
+                            path="/admin/user"
+                            element={
+                                <ProtectedRoutes
+                                    isAdmin={isAdminThere}
+                                    isAdminRoutes={true}
+                                    isAuthenticatedRoutes={true} // Set the value of isAuthenticatedRoutes explicitly
+                                >
+                                    <AdminUserManagement />
+                                </ProtectedRoutes>
+                            }
+                        />
+
+                        <Route
+                            path="/admin/chats"
+                            element={
+                                <ProtectedRoutes
+                                    isAdmin={isAdminThere}
+                                    isAdminRoutes={true}
+                                    isAuthenticatedRoutes={true} // Set the value of isAuthenticatedRoutes explicitly
+                                >
+                                    <AdminChatManagement />
+                                </ProtectedRoutes>
+                            }
+                        />
+
+                        <Route
+                            path="/admin/message"
+                            element={
+                                <ProtectedRoutes
+                                    isAdmin={isAdminThere}
+                                    isAdminRoutes={true}
+                                    isAuthenticatedRoutes={true} // Set the value of isAuthenticatedRoutes explicitly
+                                >
+                                    <AdminMessageManagement />
                                 </ProtectedRoutes>
                             }
                         />

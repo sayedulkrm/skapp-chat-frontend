@@ -34,7 +34,7 @@ const ProtectedRoutes: React.FC<IProtectedRoutes> = ({
     }
 
     if (!isAdmin && isAdminRoutes) {
-        return <Navigate to={sendToRoutes ?? "/chat"} />;
+        return <Navigate to={sendToRoutes ?? "/admin"} />;
     }
 
     // if (isAdmin && isAdminRoutes) {
