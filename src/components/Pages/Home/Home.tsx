@@ -1,7 +1,31 @@
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { userLogout } from "../../../redux/authSlice/authReducers";
+import { AppDispatch, RootState } from "../../../redux/store";
 import Navbar from "../../Layout/Navbar/Navbar";
 
 const Home = () => {
+    const dispatch = useDispatch<AppDispatch>();
+    const [loading, setLoading] = useState(false);
+
+    const { user } = useSelector((state: RootState) => state.auth);
+
+    const googleAuth = () => {
+        window.open(
+            `${import.meta.env.VITE_REACT_APP_API_URL}/auth/google/callback`,
+            "_self"
+        );
+    };
+
+    const handleLogout = async () => {
+        setLoading(true);
+        await dispatch(userLogout());
+        // await dispatch(Ggi());
+
+        setLoading(false);
+    };
+
     return (
         <>
             <Navbar />
@@ -19,6 +43,22 @@ const Home = () => {
                     >
                         Get Started
                     </Link>
+
+                    {user ? <>user is there</> : <>User is not there</>}
+
+                    <button
+                        onClick={googleAuth}
+                        className="w-full py-3 bg-red-500 rounded-md text-white hover:bg-red-600 focus:outline-none focus:bg-red-600"
+                    >
+                        Login with Google
+                    </button>
+
+                    <button
+                        onClick={handleLogout}
+                        className="w-full py-3 bg-yellow-700 rounded-md text-white hover:bg-red-600 focus:outline-none focus:bg-red-600"
+                    >
+                        {loading ? "Loading..." : "logout"}
+                    </button>
                 </div>
             </div>
         </>

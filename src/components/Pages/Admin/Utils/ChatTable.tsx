@@ -42,13 +42,13 @@ const DummyData = [
     },
 ];
 
-const chatData = [
-    {
-        name: "Lara Croft Group",
-        totalMembers: 2,
-        totalMessage: 3452,
-    },
-];
+// const chatData = [
+//     {
+//         name: "Lara Croft Group",
+//         totalMembers: 2,
+//         totalMessage: 3452,
+//     },
+// ];
 
 const columns = [
     {

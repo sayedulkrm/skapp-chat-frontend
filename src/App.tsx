@@ -11,6 +11,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import GlobalLoader from "./components/Layout/Loader/GlobalLoader";
 import ProtectedRoutes from "./components/Routes/ProtectedRoutes";
+import { useSelector } from "react-redux";
+import { RootState } from "./redux/store";
 
 const Chat = lazy(() => import("./components/Pages/Chat/Chat"));
 const ChatHome = lazy(() => import("./components/Pages/ChatHome/ChatHome"));
@@ -32,6 +34,10 @@ const AdminMessageManagement = lazy(
 
 const App = () => {
     const initialTheme = localStorage.getItem("theme") || "light";
+
+    const { user } = useSelector((state: RootState) => state.auth);
+
+    console.log("Heyyyy am the userrr =======", user);
 
     const isAdminThere = true;
 

@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { activateUser, userLogin, userRegister } from "./authReducers";
+import {
+    activateUser,
+    googleAuth,
+    userLogin,
+    userRegister,
+} from "./authReducers";
 
 interface IAuthState {
     isAuthLoading: boolean;
@@ -11,7 +16,7 @@ interface IAuthState {
 
 const initialState: IAuthState = {
     isAuthLoading: false,
-    user: true, //by default undefined
+    user: undefined, //by default undefined
     userActivationToken: "",
     authMessage: null,
     authError: null,
@@ -78,6 +83,24 @@ const authSlice = createSlice({
         builder.addCase(activateUser.rejected, (state, action) => {
             state.isAuthLoading = false;
             state.authError = action.payload?.message;
+        });
+
+        // ============================
+
+        // Google Auth Pending
+
+        builder.addCase(googleAuth.pending, (state) => {
+            state.isAuthLoading = true;
+        });
+        builder.addCase(googleAuth.fulfilled, (state, action) => {
+            state.isAuthLoading = false;
+            state.user = action.payload.user;
+            state.authMessage = action.payload.message;
+        });
+
+        builder.addCase(googleAuth.rejected, (state, action) => {
+            state.isAuthLoading = false;
+            state.authError = action.payload;
         });
     },
 });

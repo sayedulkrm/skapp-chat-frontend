@@ -90,3 +90,37 @@ export const activateUser = createAsyncThunk<
         return rejectWithValue((error.response.data ?? error) as MyKnownError);
     }
 });
+
+// logout
+export const userLogout = createAsyncThunk(
+    "user/user-logout",
+    async (arg, { rejectWithValue }) => {
+        console.log("Heyy am getting called", arg);
+        try {
+            const { data } = await axios.get(`${server}/user/logout`, {
+                withCredentials: true,
+            });
+            console.log("Am logging out", data);
+            return data;
+        } catch (error: any) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+// google auth
+export const googleAuth = createAsyncThunk(
+    "user/google-auth",
+    async (arg, { rejectWithValue }) => {
+        console.log("Heyy am getting called", arg);
+        try {
+            const { data } = await axios.get(`${server}/google/login/success`, {
+                withCredentials: true,
+            });
+            console.log("I am Google Auth ================", data);
+            return data;
+        } catch (error: any) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
