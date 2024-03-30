@@ -2,7 +2,11 @@ import { configureStore } from "@reduxjs/toolkit";
 import authSliceReducer from "./authSlice/authSlice";
 import navbarSliceReducer from "./navbarSlice/navbarSlice";
 import chatSliceReducer from "./chatSlice/chatSlice";
-import { googleAuth } from "./authSlice/authReducers";
+import {
+    getUserProfile,
+    googleAuth,
+    updateUserToken,
+} from "./authSlice/authReducers";
 
 const store = configureStore({
     reducer: {
@@ -20,7 +24,9 @@ const store = configureStore({
 // will call auth fun here
 
 const initializeStore = async () => {
+    await store.dispatch(updateUserToken());
     await store.dispatch(googleAuth());
+    await store.dispatch(getUserProfile());
 };
 
 initializeStore();

@@ -33,7 +33,9 @@ export const userLogin = createAsyncThunk<
         console.log(data);
         return data;
     } catch (error: any) {
-        return rejectWithValue((error.response.data ?? error) as MyKnownError);
+        return rejectWithValue(
+            (error.response.data ?? error?.message) as MyKnownError
+        );
     }
 });
 
@@ -55,7 +57,9 @@ export const userRegister = createAsyncThunk<
     } catch (error: any) {
         console.log(error);
 
-        return rejectWithValue((error.response.data ?? error) as MyKnownError);
+        return rejectWithValue(
+            (error.response.data ?? error?.message) as MyKnownError
+        );
     }
 });
 
@@ -87,7 +91,9 @@ export const activateUser = createAsyncThunk<
         return data;
     } catch (error: any) {
         console.log(error);
-        return rejectWithValue((error.response.data ?? error) as MyKnownError);
+        return rejectWithValue(
+            (error.response.data ?? error?.message) as MyKnownError
+        );
     }
 });
 
@@ -124,3 +130,45 @@ export const googleAuth = createAsyncThunk(
         }
     }
 );
+
+// Update User Token
+
+export const updateUserToken = createAsyncThunk<
+    any,
+    void,
+    {
+        rejectValue: any;
+    }
+>("user/updateToken", async (_, { rejectWithValue }) => {
+    try {
+        const { data } = await axios.get(`${server}/user/refreshtoken`);
+
+        console.log(data);
+        return data;
+    } catch (error: any) {
+        return rejectWithValue(
+            (error.response.data ?? error?.message) as MyKnownError
+        );
+    }
+});
+
+// Get User Profile
+
+export const getUserProfile = createAsyncThunk<
+    any,
+    void,
+    {
+        rejectValue: MyKnownError;
+    }
+>("user/me", async (_, { rejectWithValue }) => {
+    try {
+        const { data } = await axios.get(`${server}/user/me`);
+
+        console.log(data);
+        return data;
+    } catch (error: any) {
+        return rejectWithValue(
+            (error.response.data ?? error?.message) as MyKnownError
+        );
+    }
+});
