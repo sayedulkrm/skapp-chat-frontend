@@ -1,8 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
     activateUser,
+    getUserProfile,
     googleAuth,
+    updateUserToken,
     userLogin,
+    userLogout,
     userRegister,
 } from "./authReducers";
 
@@ -34,7 +37,7 @@ const authSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        // =================================================================
+        // User Login =================================================================
         builder.addCase(userLogin.pending, (state) => {
             state.isAuthLoading = true;
         });
@@ -50,7 +53,7 @@ const authSlice = createSlice({
             state.authError = action.payload?.message;
         });
 
-        // =================================================================
+        // User Register =================================================================
 
         builder.addCase(userRegister.pending, (state) => {
             state.isAuthLoading = true;
@@ -68,7 +71,7 @@ const authSlice = createSlice({
             state.authError = action.payload?.message;
         });
 
-        // =================================================================
+        // Activate User =================================================================
 
         builder.addCase(activateUser.pending, (state) => {
             state.isAuthLoading = true;
@@ -85,7 +88,39 @@ const authSlice = createSlice({
             state.authError = action.payload?.message;
         });
 
+        // User Logout =================================================================
+        builder.addCase(userLogout.pending, (state) => {
+            state.isAuthLoading = true;
+        });
+
+        builder.addCase(userLogout.fulfilled, (state, action) => {
+            state.isAuthLoading = false;
+            state.user = null;
+            state.authMessage = action.payload.message;
+        });
+
+        builder.addCase(userLogout.rejected, (state, action: any) => {
+            state.isAuthLoading = false;
+            state.authError = action.payload?.message;
+        });
+
         // ============================
+
+        // Update User Token ==================
+
+        builder.addCase(updateUserToken.pending, (state) => {
+            state.isAuthLoading = true;
+        });
+        builder.addCase(updateUserToken.fulfilled, (state, action) => {
+            state.isAuthLoading = false;
+            // state.user = action.payload.user;
+            state.authMessage = action.payload.message;
+        });
+
+        builder.addCase(updateUserToken.rejected, (state) => {
+            state.isAuthLoading = false;
+            // state.authError = action.payload;
+        });
 
         // Google Auth Pending
 
@@ -99,6 +134,21 @@ const authSlice = createSlice({
         });
 
         builder.addCase(googleAuth.rejected, (state, action) => {
+            state.isAuthLoading = false;
+            state.authError = action.payload;
+        });
+
+        // Get User Profile ==================
+
+        builder.addCase(getUserProfile.pending, (state) => {
+            state.isAuthLoading = true;
+        });
+        builder.addCase(getUserProfile.fulfilled, (state, action) => {
+            state.isAuthLoading = false;
+            state.user = action.payload.user;
+        });
+
+        builder.addCase(getUserProfile.rejected, (state, action) => {
             state.isAuthLoading = false;
             state.authError = action.payload;
         });

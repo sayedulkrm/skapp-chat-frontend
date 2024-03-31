@@ -1,34 +1,33 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { userLogout } from "../../../redux/authSlice/authReducers";
-import { AppDispatch, RootState } from "../../../redux/store";
+import { RootState } from "../../../redux/store";
+import AuthNavbar from "../../Layout/Navbar/AuthNavbar";
 import Navbar from "../../Layout/Navbar/Navbar";
 
 const Home = () => {
-    const dispatch = useDispatch<AppDispatch>();
-    const [loading, setLoading] = useState(false);
+    // const dispatch = useDispatch<AppDispatch>();
+    // const [loading, setLoading] = useState(false);
 
     const { user } = useSelector((state: RootState) => state.auth);
 
-    const googleAuth = () => {
-        window.open(
-            `${import.meta.env.VITE_REACT_APP_API_URL}/auth/google/callback`,
-            "_self"
-        );
-    };
+    // const googleAuth = () => {
+    //     window.open(
+    //         `${import.meta.env.VITE_REACT_APP_API_URL}/auth/google/callback`,
+    //         "_self"
+    //     );
+    // };
 
-    const handleLogout = async () => {
-        setLoading(true);
-        await dispatch(userLogout());
-        // await dispatch(Ggi());
+    // const handleLogout = async () => {
+    //     setLoading(true);
+    //     await dispatch(userLogout());
+    //     // await dispatch(Ggi());
 
-        setLoading(false);
-    };
+    //     setLoading(false);
+    // };
 
     return (
         <>
-            <Navbar />
+            {user ? <AuthNavbar /> : <Navbar />}
             <div className=" h-full w-full min-h-screen flex items-center justify-center">
                 <div className="flex flex-col justify-center items-center gap-10 p-8  rounded-md">
                     <h1 className="text-6xl font-semibold  mb-4">
@@ -44,7 +43,7 @@ const Home = () => {
                         Get Started
                     </Link>
 
-                    {user ? <>user is there</> : <>User is not there</>}
+                    {/* {user ? <>user is there</> : <>User is not there</>}
 
                     <button
                         onClick={googleAuth}
@@ -58,7 +57,7 @@ const Home = () => {
                         className="w-full py-3 bg-yellow-700 rounded-md text-white hover:bg-red-600 focus:outline-none focus:bg-red-600"
                     >
                         {loading ? "Loading..." : "logout"}
-                    </button>
+                    </button> */}
                 </div>
             </div>
         </>

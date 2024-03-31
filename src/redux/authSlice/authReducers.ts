@@ -91,17 +91,14 @@ export const activateUser = createAsyncThunk<
         return data;
     } catch (error: any) {
         console.log(error);
-        return rejectWithValue(
-            (error.response.data ?? error?.message) as MyKnownError
-        );
+        return rejectWithValue((error.response.data ?? error) as MyKnownError);
     }
 });
 
 // logout
 export const userLogout = createAsyncThunk(
     "user/user-logout",
-    async (arg, { rejectWithValue }) => {
-        console.log("Heyy am getting called", arg);
+    async (_, { rejectWithValue }) => {
         try {
             const { data } = await axios.get(`${server}/user/logout`, {
                 withCredentials: true,
@@ -109,7 +106,7 @@ export const userLogout = createAsyncThunk(
             console.log("Am logging out", data);
             return data;
         } catch (error: any) {
-            return rejectWithValue(error.response.data);
+            return rejectWithValue(error.response.data ?? error) as any;
         }
     }
 );

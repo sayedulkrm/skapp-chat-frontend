@@ -20,15 +20,16 @@ import {
     setSearchModal,
 } from "../../../redux/navbarSlice/navbarSlice";
 import SearchModals from "./Modals/SearchModals";
-import { RootState } from "../../../redux/store";
+import { AppDispatch, RootState } from "../../../redux/store";
 import NotificationModals from "./Modals/NotificationModals";
 import NewGroupModals from "./Modals/NewGroupModals";
+import { userLogout } from "../../../redux/authSlice/authReducers";
 
 const AuthNavbar = () => {
     const initialTheme = localStorage.getItem("theme") || "light";
     const [theme, setTheme] = useState(initialTheme);
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const { notificationModal } = useSelector(
         (state: RootState) => state.navbar
     );
@@ -157,7 +158,10 @@ const AuthNavbar = () => {
                                     <IoMdSettings /> Settings
                                 </button>
 
-                                <button className="hover:bg-gray-400 duration-200 w-full flex items-center gap-2 text-black px-4 py-2">
+                                <button
+                                    onClick={() => dispatch(userLogout())}
+                                    className="hover:bg-gray-400 duration-200 w-full flex items-center gap-2 text-black px-4 py-2"
+                                >
                                     <FiLogOut /> Logout
                                 </button>
                             </div>
