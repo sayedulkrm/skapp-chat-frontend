@@ -7,6 +7,7 @@ import AuthNavbar from "../Navbar/AuthNavbar";
 import InboxList from "../../Pages/Chat/InboxList/InboxList";
 import { useParams } from "react-router-dom";
 import ProfileView from "../../Pages/Chat/ProfileView/ProfileView";
+import { useMyChatsQuery } from "../../../redux/api/apiSlice";
 
 const AppLayout = () => (WrappedComponent: any) => {
     return (props: any) => {
@@ -15,7 +16,12 @@ const AppLayout = () => (WrappedComponent: any) => {
         const chatId = params.chatId;
 
         console.log(chatId);
+
+        const { isLoading, data, isError, error, refetch } =
+            useMyChatsQuery("");
         // Have to sent the id to redux
+
+        console.log(data);
 
         return (
             <div className="w-full h-full ">

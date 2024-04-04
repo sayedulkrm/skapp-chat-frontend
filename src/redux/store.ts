@@ -7,6 +7,7 @@ import {
     googleAuth,
     updateUserToken,
 } from "./authSlice/authReducers";
+import apiSlice from "./api/apiSlice";
 
 const store = configureStore({
     reducer: {
@@ -18,14 +19,19 @@ const store = configureStore({
         // Chat, Attachments etc
 
         chat: chatSliceReducer,
+
+        // RTK QUERRY
+        [apiSlice.reducerPath]: apiSlice.reducer,
     },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(apiSlice.middleware),
 });
 
 // will call auth fun here
 
 const initializeStore = async () => {
-    await store.dispatch(updateUserToken());
     await store.dispatch(googleAuth());
+    await store.dispatch(updateUserToken());
     await store.dispatch(getUserProfile());
 };
 

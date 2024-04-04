@@ -6,12 +6,12 @@ interface MyKnownError {
     message: string;
 }
 
-interface IRFromData {
-    name: string;
-    email: string;
-    password?: string;
-    avatar?: any;
-}
+// interface IRFromData {
+//     name: string;
+//     email: string;
+//     password?: string;
+//     avatar?: any;
+// }
 
 interface ILFromData {
     email: string;
@@ -41,13 +41,13 @@ export const userLogin = createAsyncThunk<
 
 export const userRegister = createAsyncThunk<
     any,
-    IRFromData,
+    any,
     { rejectValue: MyKnownError }
 >("user/register", async (formData, { rejectWithValue }) => {
     try {
         const { data } = await axios.post(`${server}/user/register`, formData, {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "multipart/form-data",
             },
             withCredentials: true,
         });
@@ -138,10 +138,11 @@ export const updateUserToken = createAsyncThunk<
     }
 >("user/updateToken", async (_, { rejectWithValue }) => {
     try {
-        const { data } = await axios.get(`${server}/user/refreshtoken`);
+        await axios.get(`${server}/user/refreshtoken`, {
+            withCredentials: true,
+        });
 
-        console.log(data);
-        return data;
+        return;
     } catch (error: any) {
         return rejectWithValue(
             (error.response.data ?? error?.message) as MyKnownError
@@ -159,7 +160,9 @@ export const getUserProfile = createAsyncThunk<
     }
 >("user/me", async (_, { rejectWithValue }) => {
     try {
-        const { data } = await axios.get(`${server}/user/me`);
+        const { data } = await axios.get(`${server}/user/me`, {
+            withCredentials: true,
+        });
 
         console.log(data);
         return data;

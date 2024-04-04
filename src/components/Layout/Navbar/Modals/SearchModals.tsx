@@ -15,49 +15,49 @@ const SearchModals = () => {
 
     const users: any = [
         {
-            _id: 124366453,
+            _id: 1658223,
             avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
             name: "John Doe",
         },
 
         {
-            _id: 124366453,
+            _id: 15682343,
             avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
             name: "John Doe",
         },
 
         {
-            _id: 124366453,
+            _id: 16752456,
             avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
             name: "John Doe",
         },
 
         {
-            _id: 124366453,
+            _id: 156267,
             avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
             name: "John Doe",
         },
 
         {
-            _id: 124366453,
+            _id: 187562456,
             avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
             name: "John Doe",
         },
 
         {
-            _id: 124366453,
+            _id: 175423467,
             avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
             name: "John Doe",
         },
 
         {
-            _id: 124366453,
+            _id: 1457265463,
             avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
             name: "John Doe",
         },
 
         {
-            _id: 124366453,
+            _id: 14572475,
             avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
             name: "John Doe",
         },

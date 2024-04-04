@@ -38,15 +38,16 @@ const Register: FC = () => {
             return toast.error("Name can only contain letters and numbers");
         }
 
-        const data = {
-            name,
-            email,
-            password,
-            avatar,
-        };
-        console.log("submit", data);
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("passwordConfirmation", passwordConfirmation);
+        if (avatar) {
+            formData.append("avatar", avatar);
+        }
 
-        await dispatch(userRegister(data));
+        await dispatch(userRegister(formData));
     };
 
     const handleAvatarChange = (e: any) => {
@@ -105,6 +106,7 @@ const Register: FC = () => {
                                 <input
                                     type="file"
                                     id="avatar"
+                                    required
                                     name="avatar"
                                     accept="image/*"
                                     onChange={handleAvatarChange}

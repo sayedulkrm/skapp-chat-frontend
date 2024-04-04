@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import {
-    FiSun,
-    FiMoon,
     FiBell,
-    FiUsers,
-    FiSearch,
     FiLogOut,
+    FiMoon,
+    FiSearch,
+    FiSun,
+    FiUsers,
 } from "react-icons/fi";
 // import { Link } from "react-router-dom";
 import { IoMdPerson, IoMdSettings } from "react-icons/io";
@@ -14,22 +14,23 @@ import { useNavigate } from "react-router-dom";
 
 import { FaPeopleGroup } from "react-icons/fa6";
 
+import { userLogout } from "../../../redux/authSlice/authReducers";
 import {
     setNewGroupModal,
     setNotificationModal,
     setSearchModal,
 } from "../../../redux/navbarSlice/navbarSlice";
-import SearchModals from "./Modals/SearchModals";
 import { AppDispatch, RootState } from "../../../redux/store";
-import NotificationModals from "./Modals/NotificationModals";
 import NewGroupModals from "./Modals/NewGroupModals";
-import { userLogout } from "../../../redux/authSlice/authReducers";
+import NotificationModals from "./Modals/NotificationModals";
+import SearchModals from "./Modals/SearchModals";
 
 const AuthNavbar = () => {
     const initialTheme = localStorage.getItem("theme") || "light";
     const [theme, setTheme] = useState(initialTheme);
 
     const dispatch = useDispatch<AppDispatch>();
+
     const { notificationModal } = useSelector(
         (state: RootState) => state.navbar
     );
