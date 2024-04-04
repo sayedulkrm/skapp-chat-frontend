@@ -11,7 +11,7 @@ import {
 
 interface IAuthState {
     isAuthLoading: boolean;
-    user: null | unknown; // You can use `null | unknown` or provide a more specific type
+    user: null | unknown | any; // You can use `null | unknown` or provide a more specific type
     userActivationToken: string;
     authMessage: null | string;
     authError: any;

@@ -5,6 +5,8 @@ import {
     setSearchModal,
     setSearchPeople,
 } from "../../../../redux/navbarSlice/navbarSlice";
+import { useEffect, useState } from "react";
+import { useLazySearchUserQuery } from "../../../../redux/navbarSlice/otherApi";
 
 const SearchModals = () => {
     const dispatch = useDispatch();
@@ -13,55 +15,39 @@ const SearchModals = () => {
         (state: RootState) => state.navbar
     );
 
-    const users: any = [
-        {
-            _id: 1658223,
-            avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
-            name: "John Doe",
-        },
+    const [users, setUsers] = useState<any[]>([]);
 
-        {
-            _id: 15682343,
-            avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
-            name: "John Doe",
-        },
+    const [searchUser] = useLazySearchUserQuery();
 
-        {
-            _id: 16752456,
-            avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
-            name: "John Doe",
-        },
+    useEffect(() => {
+        const timeOutId = setTimeout(() => {
+            searchUser(searchPeople)
+                .then(({ data }) => setUsers(data.users))
+                .catch((err) => console.log(err));
+        }, 1000);
 
-        {
-            _id: 156267,
-            avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
-            name: "John Doe",
-        },
+        // clean up functions
+        return () => {
+            clearTimeout(timeOutId);
+        };
+    }, [searchPeople]);
 
-        {
-            _id: 187562456,
-            avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
-            name: "John Doe",
-        },
+    // async await
 
-        {
-            _id: 175423467,
-            avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
-            name: "John Doe",
-        },
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const { data } = await searchUser(searchPeople);
+    //             setUsers(data.users);
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //     };
 
-        {
-            _id: 1457265463,
-            avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
-            name: "John Doe",
-        },
+    //     const timeoutId = setTimeout(fetchData, 1000);
 
-        {
-            _id: 14572475,
-            avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
-            name: "John Doe",
-        },
-    ];
+    //     return () => clearTimeout(timeoutId);
+    // }, [searchPeople]);
 
     return (
         <div
@@ -96,6 +82,7 @@ const SearchModals = () => {
                             <input
                                 type="text"
                                 value={searchPeople}
+                                placeholder="Enter user name..."
                                 className="border-2 focus:border-blue-400 bg-transparent rounded-md text-sm px-4 py-2"
                                 onChange={(e) =>
                                     dispatch(setSearchPeople(e.target.value))
@@ -123,9 +110,11 @@ const SearchModals = () => {
                                                 </div>
 
                                                 {/* name */}
-                                                <h1 className="text-xl line-clamp-1">
-                                                    {name}
-                                                </h1>
+                                                <div className="flex flex-col justify-start items-start gap-2">
+                                                    <h1 className="text-xl line-clamp-1">
+                                                        {name}
+                                                    </h1>
+                                                </div>
                                             </div>
 
                                             {/* Add friend */}

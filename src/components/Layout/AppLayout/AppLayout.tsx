@@ -4,10 +4,12 @@ import { FiList } from "react-icons/fi";
 import Title from "../../Shared/Title";
 import AuthNavbar from "../Navbar/AuthNavbar";
 // import InboxSkeleton from "../Loader/Skeleton/InboxSkeleton";
-import InboxList from "../../Pages/Chat/InboxList/InboxList";
 import { useParams } from "react-router-dom";
-import ProfileView from "../../Pages/Chat/ProfileView/ProfileView";
 import { useMyChatsQuery } from "../../../redux/api/apiSlice";
+import { useErrors } from "../../Hooks/Hooks";
+import InboxList from "../../Pages/Chat/InboxList/InboxList";
+import ProfileView from "../../Pages/Chat/ProfileView/ProfileView";
+import InboxSkeleton from "../Loader/Skeleton/InboxSkeleton";
 
 const AppLayout = () => (WrappedComponent: any) => {
     return (props: any) => {
@@ -17,11 +19,25 @@ const AppLayout = () => (WrappedComponent: any) => {
 
         console.log(chatId);
 
-        const { isLoading, data, isError, error, refetch } =
-            useMyChatsQuery("");
+        const {
+            isLoading: chatQuerryLoading,
+            data: chatQuesrryData,
+            isError,
+            error,
+            // refetch,
+        } = useMyChatsQuery("");
         // Have to sent the id to redux
 
-        console.log(data);
+        console.log(chatQuesrryData);
+
+        useErrors([{ isError, error }]);
+
+        // useEffect(() => {
+        //     if (isError) {
+        //         const errordata = error as any;
+        //         toast.error(errordata?.data?.message || "Something went wrong");
+        //     }
+        // }, [isError, error]);
 
         return (
             <div className="w-full h-full ">
@@ -34,13 +50,23 @@ const AppLayout = () => (WrappedComponent: any) => {
                         {/* chatlish */}
 
                         <div className="hidden md:block w-4/12 h-full max-h-[92vh] min-h-[92vh]  overflow-y-auto  p-3 border-r">
-                            {/* {Array.from({ length: 10 }).map((_, index) => (
-                                <div key={index} className="w-full h-full">
-                                    <InboxSkeleton />
-                                </div>
-                            ))} */}
-
-                            <InboxList />
+                            {chatQuerryLoading ? (
+                                <>
+                                    {" "}
+                                    {Array.from({ length: 10 }).map(
+                                        (_, index) => (
+                                            <div
+                                                key={index}
+                                                className="w-full h-full"
+                                            >
+                                                <InboxSkeleton />
+                                            </div>
+                                        )
+                                    )}
+                                </>
+                            ) : (
+                                <InboxList />
+                            )}
                         </div>
                         {/* for mobile */}
 

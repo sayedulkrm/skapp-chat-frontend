@@ -35,6 +35,8 @@ const AuthNavbar = () => {
         (state: RootState) => state.navbar
     );
 
+    const { user } = useSelector((state: RootState) => state.auth);
+
     const [profileButton, setProfileButton] = useState(false);
 
     const navigate = useNavigate();
@@ -142,8 +144,8 @@ const AuthNavbar = () => {
                         onClick={handleProfileButtonClick}
                     >
                         <img
-                            src="https://cdn.pixabay.com/photo/2021/01/04/10/41/icon-5887126_1280.png"
-                            alt="name"
+                            src={user?.avatar?.url}
+                            alt={user?.name}
                             className="h-10 w-auto rounded-full object-cover"
                         />
                     </button>

@@ -15,6 +15,16 @@ const initialState = {
     newGroupModal: false,
     newGroupPeoples: [] as any[],
     newGroupName: "",
+
+    // is File Menu =================================================
+
+    isFileMenu: false,
+    isDeleteMenu: false,
+    uploadingLoader: false,
+    seletectedDeleteChat: {
+        chatId: "",
+        groupChat: false,
+    },
 };
 
 const navbarSlice = createSlice({
@@ -59,6 +69,17 @@ const navbarSlice = createSlice({
         setGroupName: (state, action) => {
             state.newGroupName = action.payload;
         },
+
+        setIsFileMenu: (state, action) => {
+            state.isFileMenu = action.payload;
+        },
+        setIsDeleteMenu: (state, action) => {
+            state.isDeleteMenu = action.payload;
+        },
+        setUploadingLoader: (state, action) => {
+            state.uploadingLoader = action.payload;
+        },
+        setSeletectedDeleteChat: (state, action) => {},
     },
     // extraReducers: (builder) => {},
 });
@@ -70,6 +91,10 @@ export const {
     setNewGroupModal,
     setNewGroupPeoples,
     setGroupName,
+    setIsDeleteMenu,
+    setIsFileMenu,
+    setSeletectedDeleteChat,
+    setUploadingLoader,
 } = navbarSlice.actions;
 
 export default navbarSlice.reducer;
