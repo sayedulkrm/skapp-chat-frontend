@@ -1,12 +1,16 @@
+import { useEffect, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../redux/store";
 import {
     setSearchModal,
     setSearchPeople,
 } from "../../../../redux/navbarSlice/navbarSlice";
-import { useEffect, useState } from "react";
-import { useLazySearchUserQuery } from "../../../../redux/navbarSlice/otherApi";
+import {
+    useLazySearchUserQuery,
+    useSendFriendRequestMutation,
+} from "../../../../redux/navbarSlice/otherApi";
+import { RootState } from "../../../../redux/store";
+import { useAsyncMutaltion } from "../../../Hooks/Hooks";
 
 const SearchModals = () => {
     const dispatch = useDispatch();
@@ -15,9 +19,35 @@ const SearchModals = () => {
         (state: RootState) => state.navbar
     );
 
+    const { user: storedUser } = useSelector((state: RootState) => state.auth);
+
     const [users, setUsers] = useState<any[]>([]);
 
     const [searchUser] = useLazySearchUserQuery();
+
+    // const [sendFriendRequest] = useSendFriendRequestMutation();
+
+    const [sendFriendRequest, isLoadingSendFriendRequest] = useAsyncMutaltion(
+        useSendFriendRequestMutation
+    );
+
+    const addFriendHandler = async (id: any) => {
+        await sendFriendRequest("Sending Request", { userId: id });
+        // try {
+        //     const res: any = await sendFriendRequest({ userId: id });
+
+        //     if (res?.data) {
+        //         toast.success(res?.data?.message || "Friend request sent");
+        //     } else {
+        //         toast.error(
+        //             res?.error?.data?.message || "Something went wrong"
+        //         );
+        //     }
+        // } catch (error) {
+        //     console.log(error);
+        //     toast.error("Something went wrong");
+        // }
+    };
 
     useEffect(() => {
         const timeOutId = setTimeout(() => {
@@ -119,9 +149,19 @@ const SearchModals = () => {
 
                                             {/* Add friend */}
 
-                                            <button className="w-16 p-2 rounded-md text-sm bg-cyan-500">
-                                                Add
-                                            </button>
+                                            {storedUser?._id !== _id && (
+                                                <button
+                                                    onClick={() =>
+                                                        addFriendHandler(_id)
+                                                    }
+                                                    disabled={
+                                                        isLoadingSendFriendRequest
+                                                    }
+                                                    className="w-16 p-2 rounded-md text-sm bg-cyan-500"
+                                                >
+                                                    Add
+                                                </button>
+                                            )}
                                         </div>
                                     );
                                 })}

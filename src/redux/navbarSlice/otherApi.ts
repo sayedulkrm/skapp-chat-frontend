@@ -11,9 +11,22 @@ const otherApi = apiSlice.injectEndpoints({
 
             providesTags: ["User"],
         }),
+
+        // send req
+        sendFriendRequest: builder.mutation({
+            query: (data) => ({
+                url: "/user/sendrequest",
+                method: "PUT",
+                credentials: "include",
+                body: data,
+            }),
+
+            invalidatesTags: ["User"],
+        }),
     }),
 });
 
-export const { useLazySearchUserQuery } = otherApi;
+export const { useLazySearchUserQuery, useSendFriendRequestMutation } =
+    otherApi;
 
 export default otherApi;
