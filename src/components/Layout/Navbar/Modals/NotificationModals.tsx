@@ -1,7 +1,14 @@
 import { IoCloseSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../redux/store";
 import { setNotificationModal } from "../../../../redux/navbarSlice/navbarSlice";
+import {
+    useAcceptFriendRequestMutation,
+    useGetNotificationsQuery,
+} from "../../../../redux/navbarSlice/otherApi";
+import { RootState } from "../../../../redux/store";
+import { useErrors } from "../../../Hooks/Hooks";
+import InboxSkeleton from "../../Loader/Skeleton/InboxSkeleton";
+import { toast } from "react-toastify";
 
 const NotificationModals = () => {
     const dispatch = useDispatch();
@@ -10,21 +17,39 @@ const NotificationModals = () => {
         (state: RootState) => state.navbar
     );
 
-    const notifications: any[] = [
-        {
-            _id: 124366453,
-            sender: {
-                avatar: "https://imgupscaler.com/images/samples/animal-before.webp",
-                name: "John Doe",
-            },
-        },
-    ];
+    const { isLoading, data, error, isError } = useGetNotificationsQuery("");
+
+    const [acceptRequest] = useAcceptFriendRequestMutation();
 
     // Friend Reqest Handler
 
-    const friendReqestHandler = ({ _id, accept }: any) => {
+    const friendReqestHandler = async ({ _id, accept }: any) => {
         console.log("Accepting friend request", _id, accept);
+        try {
+            const res = await acceptRequest({
+                requestId: _id,
+
+                accept,
+            });
+
+            if ("data" in res && res.data?.success) {
+                // we will use socket thats why not using the custom hooks
+
+                toast.success(res.data.message);
+            } else {
+                toast.error(
+                    ("data" in res && res.data.message) ||
+                        "something went wrong"
+                );
+            }
+        } catch (error) {
+            console.log(error);
+        }
     };
+
+    useErrors([{ error, isError }]);
+
+    console.log(data);
 
     return (
         <div
@@ -58,8 +83,10 @@ const NotificationModals = () => {
 
                         {/* =========================== main div  */}
                         <div className="w-full h-full">
-                            {notifications?.length > 0 ? (
-                                notifications?.map((item) => (
+                            {isLoading ? (
+                                <InboxSkeleton />
+                            ) : data?.allRequest?.length > 0 ? (
+                                data?.allRequest?.map((item: any) => (
                                     <div
                                         className="w-full h-full"
                                         key={item?._id}

@@ -23,10 +23,37 @@ const otherApi = apiSlice.injectEndpoints({
 
             invalidatesTags: ["User"],
         }),
+
+        // get notification
+        getNotifications: builder.query({
+            query: () => ({
+                url: "/user/notifications",
+                method: "GET",
+                credentials: "include",
+            }),
+
+            keepUnusedDataFor: 0,
+        }),
+
+        // Accept request
+        acceptFriendRequest: builder.mutation({
+            query: (data) => ({
+                url: "/user/acceptrequest",
+                method: "PUT",
+                credentials: "include",
+                body: data,
+            }),
+
+            invalidatesTags: ["Chat"],
+        }),
     }),
 });
 
-export const { useLazySearchUserQuery, useSendFriendRequestMutation } =
-    otherApi;
+export const {
+    useLazySearchUserQuery,
+    useSendFriendRequestMutation,
+    useGetNotificationsQuery,
+    useAcceptFriendRequestMutation,
+} = otherApi;
 
 export default otherApi;

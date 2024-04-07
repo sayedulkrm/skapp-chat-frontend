@@ -30,8 +30,8 @@ const store = configureStore({
 // will call auth fun here
 
 const initializeStore = async () => {
-    await store.dispatch(googleAuth());
     await store.dispatch(updateUserToken());
+    await store.dispatch(googleAuth());
     await store.dispatch(getUserProfile());
 };
 
