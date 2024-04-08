@@ -28,7 +28,9 @@ export const userLogin = createAsyncThunk<
     console.log("login: ", formData);
 
     try {
-        const { data } = await axios.post(`${server}/user/login`, formData);
+        const { data } = await axios.post(`${server}/user/login`, formData, {
+            withCredentials: true,
+        });
 
         console.log(data);
         return data;

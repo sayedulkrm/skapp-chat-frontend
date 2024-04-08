@@ -11,6 +11,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import GlobalLoader from "./components/Layout/Loader/GlobalLoader";
 import ProtectedRoutes from "./components/Routes/ProtectedRoutes";
+import { SocketProvider } from "./socket";
 
 const Chat = lazy(() => import("./components/Pages/Chat/Chat"));
 const ChatHome = lazy(() => import("./components/Pages/ChatHome/ChatHome"));
@@ -62,10 +63,31 @@ const App = () => {
                         <Route path="/verify" element={<Verification />} />
 
                         {/* ============================================= */}
-
-                        <Route path="/chat" element={<ChatHome />} />
-                        <Route path="/chat/:chatId" element={<Chat />} />
-                        <Route path="/groups" element={<Groups />} />
+                        {/* wrap protected routes with socket provider */}
+                        <Route
+                            path="/chat"
+                            element={
+                                <SocketProvider>
+                                    <ChatHome />
+                                </SocketProvider>
+                            }
+                        />
+                        <Route
+                            path="/chat/:chatId"
+                            element={
+                                <SocketProvider>
+                                    <Chat />
+                                </SocketProvider>
+                            }
+                        />
+                        <Route
+                            path="/groups"
+                            element={
+                                <SocketProvider>
+                                    <Groups />
+                                </SocketProvider>
+                            }
+                        />
 
                         {/* Admin */}
 

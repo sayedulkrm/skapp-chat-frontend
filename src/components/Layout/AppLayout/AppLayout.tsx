@@ -10,6 +10,7 @@ import { useErrors } from "../../Hooks/Hooks";
 import InboxList from "../../Pages/Chat/InboxList/InboxList";
 import ProfileView from "../../Pages/Chat/ProfileView/ProfileView";
 import InboxSkeleton from "../Loader/Skeleton/InboxSkeleton";
+import { getSocket } from "../../../socket";
 
 const AppLayout = () => (WrappedComponent: any) => {
     return (props: any) => {
@@ -21,14 +22,18 @@ const AppLayout = () => (WrappedComponent: any) => {
 
         const {
             isLoading: chatQuerryLoading,
-            data: chatQuesrryData,
+
             isError,
             error,
             // refetch,
         } = useMyChatsQuery("");
         // Have to sent the id to redux
 
-        console.log(chatQuesrryData);
+        // Adding Socket io
+
+        const socket = getSocket();
+
+        console.log("Socket==================\n", socket);
 
         useErrors([{ isError, error }]);
 
