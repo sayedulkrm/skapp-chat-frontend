@@ -63,4 +63,20 @@ const useAsyncMutaltion = (mutationHook: any) => {
     return [executeMutation, isLoading, data] as const;
 };
 
-export { useErrors, useAsyncMutaltion };
+// watch video from 03: 00 : 00  ===>
+
+const useSocketEvents = (socket: any, handlers: any) => {
+    useEffect(() => {
+        Object.entries(handlers).forEach(([event, handler]) => {
+            socket.on(event, handler);
+        });
+
+        return () => {
+            Object.entries(handlers).forEach(([event, handler]) => {
+                socket.on(event, handler);
+            });
+        };
+    }, []);
+};
+
+export { useAsyncMutaltion, useErrors, useSocketEvents };

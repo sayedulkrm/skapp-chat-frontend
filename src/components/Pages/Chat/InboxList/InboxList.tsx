@@ -1,9 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import AvatarGroup from "./AvatarGroup";
 import { useMyChatsQuery } from "../../../../redux/api/apiSlice";
 
 const InboxList = () => {
     const { data } = useMyChatsQuery("");
+
+    const params = useParams();
+
+    const chatId = params.chatId;
 
     // const list = {
     //     w: "100%",
@@ -45,7 +49,7 @@ const InboxList = () => {
     };
 
     return (
-        <div className="w-full h-full">
+        <div className="w-full h-full ">
             <div className="w-full h-full">
                 {data?.chats?.length > 0 ? (
                     data?.chats?.map((chat: any, i: number) => {
@@ -58,7 +62,11 @@ const InboxList = () => {
                         return (
                             <Link
                                 to={`/chat/${chat._id}`}
-                                className="w-full h-full flex justify-center items-center py-4 border-b border-gray-200 dark:border-gray-700"
+                                className={` ${
+                                    chatId === chat._id
+                                        ? "bg-gray-400 dark:bg-black"
+                                        : "bg-transparent"
+                                } hover:bg-gray-500 hover:dark:bg-slate-900 duration-200 w-full h-full flex justify-center items-center py-4 px-3 border-b border-gray-200 dark:border-gray-700`}
                                 key={i}
                                 onContextMenu={(e) =>
                                     handleDeleteChat(

@@ -6,7 +6,7 @@ import { server } from "../../backend";
 const apiSlice = createApi({
     reducerPath: "api",
     baseQuery: fetchBaseQuery({ baseUrl: `${server}` }),
-    tagTypes: ["Chat", "User"],
+    tagTypes: ["Chat", "User", "Message"],
 
     endpoints: (builder) => ({
         myChats: builder.query({

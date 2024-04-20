@@ -72,7 +72,7 @@ const AuthNavbar = () => {
     }, [theme]);
 
     return (
-        <nav className="bg-white dark:bg-gray-800 p-4 flex justify-between items-center h-[8vh] ">
+        <nav className="bg-white dark:bg-gray-800 p-4 flex justify-between items-center h-[8vh] shadow-md ">
             {/* Logo */}
             <div className="flex items-center">
                 <h1 className="text-2xl font-semibold mr-4">skapp</h1>
@@ -144,7 +144,7 @@ const AuthNavbar = () => {
                         onClick={handleProfileButtonClick}
                     >
                         <img
-                            src={user?.avatar?.url}
+                            src={user?.avatar.url}
                             alt={user?.name}
                             className="h-10 w-auto rounded-full object-cover"
                         />

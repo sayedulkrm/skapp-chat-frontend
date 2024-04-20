@@ -1,14 +1,13 @@
 import moment from "moment";
 import { fileFormat } from "./Features/Feature";
 import RenderAttachment from "../../../Shared/RenderAttachment";
+import { RootState } from "../../../../redux/store";
+import { useSelector } from "react-redux";
 
 const MessageComponents = ({ message }: any) => {
-    console.log(message);
+    // console.log(message);
 
-    const user = {
-        _id: "123chds",
-        name: "Well",
-    };
+    const { user } = useSelector((state: RootState) => state.auth);
 
     const { sender, content, attachments = [], createdAt } = message;
 
@@ -17,38 +16,42 @@ const MessageComponents = ({ message }: any) => {
     const timeAgo = moment(createdAt).fromNow();
 
     return (
-        <div className={`${sameSender ? "self-end" : "self-start"}`}>
-            {!sameSender && (
-                <p className="text-cyan-500 font-bold text-lg mb-2">
-                    {sender.name}
-                </p>
-            )}
-            <div className={` py-1 px-2 rounded-md w-fit bg-white text-black `}>
-                {content && <p className="mb-2 text-lg">{content}</p>}
+        <div className="w-full flex flex-col">
+            <div className={`${sameSender ? "self-end" : "self-start"}`}>
+                {!sameSender && (
+                    <p className="text-cyan-500 font-bold text-lg mb-2">
+                        {sender.name}
+                    </p>
+                )}
+                <div
+                    className={` py-1 px-2 rounded-md w-fit bg-white text-black `}
+                >
+                    {content && <p className="mb-2 text-lg">{content}</p>}
 
-                {/* Attachments */}
+                    {/* Attachments */}
 
-                {attachments.length > 0 &&
-                    attachments?.map((item: any, i: number) => {
-                        const url = item?.url;
+                    {attachments.length > 0 &&
+                        attachments?.map((item: any, i: number) => {
+                            const url = item?.url;
 
-                        const fileType = fileFormat(url);
+                            const fileType = fileFormat(url);
 
-                        return (
-                            <div className="my-4" key={i}>
-                                <a
-                                    href={url}
-                                    target="_blank"
-                                    download={true}
-                                    className="text-black "
-                                >
-                                    {RenderAttachment(fileType, url)}
-                                </a>
-                            </div>
-                        );
-                    })}
+                            return (
+                                <div className="my-4" key={i}>
+                                    <a
+                                        href={url}
+                                        target="_blank"
+                                        download={true}
+                                        className="text-black "
+                                    >
+                                        {RenderAttachment(fileType, url)}
+                                    </a>
+                                </div>
+                            );
+                        })}
+                </div>
             </div>
-            <p className="text-sm text-center mt-2 font-medium text-gray-500">
+            <p className="text-sm text-center mt-2 font-medium text-gray-500 w-full flex justify-center items-center ">
                 {timeAgo}
             </p>
         </div>

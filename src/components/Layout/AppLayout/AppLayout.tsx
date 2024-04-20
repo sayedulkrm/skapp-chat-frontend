@@ -10,7 +10,6 @@ import { useErrors } from "../../Hooks/Hooks";
 import InboxList from "../../Pages/Chat/InboxList/InboxList";
 import ProfileView from "../../Pages/Chat/ProfileView/ProfileView";
 import InboxSkeleton from "../Loader/Skeleton/InboxSkeleton";
-import { getSocket } from "../../../socket";
 
 const AppLayout = () => (WrappedComponent: any) => {
     return (props: any) => {
@@ -31,9 +30,7 @@ const AppLayout = () => (WrappedComponent: any) => {
 
         // Adding Socket io
 
-        const socket = getSocket();
-
-        console.log("Socket==================\n", socket);
+        // const socket = getSocket();
 
         useErrors([{ isError, error }]);
 
@@ -54,7 +51,7 @@ const AppLayout = () => (WrappedComponent: any) => {
                     <div className="w-full h-full flex justify-start items-start">
                         {/* chatlish */}
 
-                        <div className="hidden md:block w-4/12 h-full max-h-[92vh] min-h-[92vh]  overflow-y-auto  p-3 border-r">
+                        <div className="hidden md:block w-4/12 h-full max-h-[92vh] min-h-[92vh]  overflow-y-auto border-r">
                             {chatQuerryLoading ? (
                                 <>
                                     {" "}
