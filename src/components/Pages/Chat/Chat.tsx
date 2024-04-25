@@ -16,9 +16,9 @@ import { getSocket } from "../../../socket";
 import { NEW_MESSAGE } from "../../Constants/events";
 import { useErrors, useSocketEvents } from "../../Hooks/Hooks";
 import GlobalLoader from "../../Layout/Loader/GlobalLoader";
+import SpinLoader from "../../Layout/Loader/SpinLoader";
 import FileMenu from "./Dialogs/FileMenu";
 import MessageComponents from "./MessageComponents/MessageComponents";
-import { toast } from "react-toastify";
 
 const Chat = () => {
     const params = useParams();
@@ -27,8 +27,11 @@ const Chat = () => {
 
     const socket = getSocket();
 
-    const [allMessage, setAllMessage] = useState<any[]>([]);
+    const [allOlderMessage, setAllOlderMessage] = useState<any>([]);
+
+    // const [allMessage, setAllMessage] = useState<any[]>([]);
     const containerRef = useRef<any>(null);
+    const scrollRef = useRef<any>(null);
     const [message, setMessage] = useState("");
     const [page, setPage] = useState(1);
 
@@ -80,7 +83,8 @@ const Chat = () => {
 
     const newMessageHandler = useCallback((data: any) => {
         // console.log(data);
-        setAllMessage((prev) => [...prev, data.message]);
+        // setAllMessage((prev) => [...prev, data.message]);
+        setAllOlderMessage((prev: any) => [...prev, data.message]);
     }, []);
 
     const eventArray = { [NEW_MESSAGE]: newMessageHandler };
@@ -89,58 +93,25 @@ const Chat = () => {
 
     useErrors(errors);
 
-    const DBandSockectMessages = [
-        ...(oldMessages?.messages || []),
-        ...allMessage,
-    ];
-
-    // console.log("DBandSockectMessages:", DBandSockectMessages);
-
-    // console.log("MYYY DB MESSAGEEEEEEEEEEE", DBandSockectMessages);
-
-    // infinite scroll
+    // const DBandSockectMessages = [
+    //     ...(oldMessages?.messages || []),
+    //     ...allMessage,
+    // ];
 
     const handleInfiniteScroll = () => {
         if (containerRef.current) {
-            const { scrollTop, clientHeight, scrollHeight } =
-                containerRef.current;
-            const threshold = 100;
+            const { scrollTop } = containerRef.current;
+            const threshold = 1;
 
             // Check if user has scrolled close to the top and there are more pages available
             if (scrollTop < threshold && !isOldMessagesLoading && hasMore) {
                 console.log("User has reached the top, loading more messages");
+                refetchOldMessages();
+
                 setPage((prevPage) => prevPage + 1); // Increment page number
             }
         }
     };
-
-    // const handleInfiniteScroll = () => {
-    //     if (containerRef.current) {
-    //         const { scrollTop } = containerRef.current;
-    //         const threshold = 100;
-
-    //         if (page > totalPages) {
-    //             setHasMore(true);
-    //             console.info("HEYY AM PAGE > TOTAL PAGE");
-    //             return;
-    //         }
-
-    //         if (page < totalPages) {
-    //             // Check if user has scrolled close to the top
-    //             if (scrollTop < threshold && !isOldMessagesLoading) {
-    //                 console.log(
-    //                     "User has reached the top, loading more messages"
-    //                 );
-
-    //                 // Increment the page to fetch more messages
-    //                 console.warn("BLOOOOOD BLODDDDD");
-    //                 setPage((prevPage) => prevPage + 1);
-    //             }
-    //         } else {
-    //             return;
-    //         }
-    //     }
-    // };
 
     useEffect(() => {
         if (page >= totalPages) {
@@ -166,43 +137,33 @@ const Chat = () => {
                 );
             }
         };
-    }, [DBandSockectMessages]);
+    }, [oldMessages]);
 
-    // Function to scroll the chat to the bottom
-    const scrollToBottom = () => {
-        if (containerRef?.current) {
-            containerRef.current.scrollTop = containerRef.current.scrollHeight;
-        }
-    };
-
-    // Update all messages whenever new oldMessages data is available
+    // Inside the useEffect hook for DBandSockectMessages
     useEffect(() => {
         if (oldMessages) {
-            setAllMessage((prevMessages) => [
+            // setAllMessage((prev) => [...prev, ...oldMessages.messages]);
+            setAllOlderMessage((prev: any) => [
                 ...(oldMessages?.messages || []),
-                ...prevMessages,
+                ...prev,
             ]);
         }
     }, [oldMessages]);
 
+    // Function to scroll the chat to the bottom
+    const scrollToBottom = () => {
+        if (scrollRef.current) {
+            // containerRef.current.scrollTop = containerRef.current.scrollHeight;
+            scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+        }
+    };
+
     useEffect(() => {
         // Scroll to the bottom initially when the page loads
         scrollToBottom();
-    }, []);
-
-    // useEffect(() => {
-    //     if (totalPages && page <= totalPages) {
-    //         setHasMore(true);
-    //     } else {
-    //         setHasMore(false);
-    //     }
-    // }, [page, totalPages]);
+    }, [allOlderMessage]);
 
     console.log("HAS MOREEE", hasMore);
-
-    useEffect(() => {
-        refetchOldMessages();
-    }, [page]);
 
     return (
         <>
@@ -221,14 +182,16 @@ const Chat = () => {
                             </p>
                         )}
 
-                        {DBandSockectMessages.map(
-                            (item: any, index: number) => (
-                                <MessageComponents message={item} key={index} />
-                            )
+                        {isOldMessagesLoading && (
+                            <div className="w-full flex justify-center items-center">
+                                <SpinLoader />
+                            </div>
                         )}
 
-                        {allMessage?.map((item, index) => (
-                            <MessageComponents message={item} key={index} />
+                        {allOlderMessage.map((item: any, index: number) => (
+                            <div ref={scrollRef} key={index}>
+                                <MessageComponents message={item} key={index} />
+                            </div>
                         ))}
                     </div>
 
