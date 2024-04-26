@@ -4,6 +4,10 @@ const initialState = {
     // Attachment
     openAttachmentDialogBox: false,
 
+    attachmentLoader: false,
+
+    // =================
+
     userInputText: "",
 
     // Group
@@ -20,6 +24,11 @@ const chatSlice = createSlice({
         setOpenAttachmentDialogBox: (state, action) => {
             state.openAttachmentDialogBox = action.payload;
         },
+
+        setAttachmentLoader: (state, action) => {
+            state.attachmentLoader = action.payload;
+        },
+        // ========================
 
         setUserInputText: (state, action) => {
             state.userInputText = action.payload;
@@ -40,6 +49,7 @@ export const {
     setUserInputText,
     setOpenAddMembersBox,
     setOpenConfirmDeleteGroupBox,
+    setAttachmentLoader,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

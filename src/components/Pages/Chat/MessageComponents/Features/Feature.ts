@@ -25,6 +25,12 @@ const fileFormat = (url: any) => {
     return "file";
 };
 
-const transformImage = (url: string, width = 100) => url;
+// dpr_auto/w_200
+
+const transformImage = (url: string, width = 200) => {
+    const newUrl = url.replace("upload/", `upload/dpr_auto/w_${width}/`);
+
+    return newUrl;
+};
 
 export { fileFormat, transformImage };

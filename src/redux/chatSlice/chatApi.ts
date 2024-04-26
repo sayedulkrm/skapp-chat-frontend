@@ -31,9 +31,24 @@ const chatApi = apiSlice.injectEndpoints({
 
             providesTags: ["Message"],
         }),
+
+        // send attachments
+
+        sendAttachments: builder.mutation({
+            query: (data) => ({
+                url: "/chat/message",
+                method: "POST",
+                credentials: "include",
+                body: data,
+            }),
+        }),
     }),
 });
 
-export const { useChatDetailsQuery, useGetOldMessagesQuery } = chatApi;
+export const {
+    useChatDetailsQuery,
+    useGetOldMessagesQuery,
+    useSendAttachmentsMutation,
+} = chatApi;
 
 export default chatApi;
