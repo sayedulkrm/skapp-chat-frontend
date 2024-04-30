@@ -17,7 +17,8 @@ const NotificationModals = () => {
         (state: RootState) => state.navbar
     );
 
-    const { isLoading, data, error, isError } = useGetNotificationsQuery("");
+    const { isLoading, data, error, isError, refetch } =
+        useGetNotificationsQuery("");
 
     const [acceptRequest] = useAcceptFriendRequestMutation();
 
@@ -42,6 +43,7 @@ const NotificationModals = () => {
                         "something went wrong"
                 );
             }
+            await refetch();
         } catch (error) {
             console.log(error);
         }

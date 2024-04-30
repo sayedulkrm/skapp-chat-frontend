@@ -6,14 +6,25 @@ import AuthNavbar from "../Navbar/AuthNavbar";
 // import InboxSkeleton from "../Loader/Skeleton/InboxSkeleton";
 import { useParams } from "react-router-dom";
 import { useMyChatsQuery } from "../../../redux/api/apiSlice";
-import { useErrors } from "../../Hooks/Hooks";
+import { useErrors, useSocketEvents } from "../../Hooks/Hooks";
 import InboxList from "../../Pages/Chat/InboxList/InboxList";
 import ProfileView from "../../Pages/Chat/ProfileView/ProfileView";
 import InboxSkeleton from "../Loader/Skeleton/InboxSkeleton";
+import { getSocket } from "../../../socket";
+import { NEW_MESSAGE_ALEART, NEW_REQUEST } from "../../Constants/events";
+import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setNotificationCount } from "../../../redux/navbarSlice/navbarSlice";
+import { RootState } from "../../../redux/store";
 
 const AppLayout = () => (WrappedComponent: any) => {
     return (props: any) => {
         const params = useParams();
+
+        const dispatch = useDispatch();
+        const { notificationCount } = useSelector(
+            (state: RootState) => state.navbar
+        );
 
         const chatId = params.chatId;
 
@@ -28,9 +39,20 @@ const AppLayout = () => (WrappedComponent: any) => {
         } = useMyChatsQuery("");
         // Have to sent the id to redux
 
-        // Adding Socket io
+        const newMessageAleartHandler = useCallback(() => {}, []);
+        const newRequestNotificationHandler = useCallback(() => {
+            dispatch(setNotificationCount(notificationCount + 1));
+        }, [dispatch]);
 
-        // const socket = getSocket();
+        // Adding Socket io
+        const socket = getSocket();
+
+        const eventArray = {
+            [NEW_MESSAGE_ALEART]: newMessageAleartHandler,
+            [NEW_REQUEST]: newRequestNotificationHandler,
+        };
+
+        useSocketEvents(socket, eventArray);
 
         useErrors([{ isError, error }]);
 

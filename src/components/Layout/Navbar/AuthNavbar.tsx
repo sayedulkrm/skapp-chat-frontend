@@ -17,6 +17,7 @@ import { FaPeopleGroup } from "react-icons/fa6";
 import { userLogout } from "../../../redux/authSlice/authReducers";
 import {
     setNewGroupModal,
+    setNotificationCount,
     setNotificationModal,
     setSearchModal,
 } from "../../../redux/navbarSlice/navbarSlice";
@@ -36,6 +37,9 @@ const AuthNavbar = () => {
     );
 
     const { user } = useSelector((state: RootState) => state.auth);
+    const { notificationCount } = useSelector(
+        (state: RootState) => state.navbar
+    );
 
     const [profileButton, setProfileButton] = useState(false);
 
@@ -59,6 +63,7 @@ const AuthNavbar = () => {
 
     const openNotificationsBox = () => {
         dispatch(setNotificationModal(true));
+        dispatch(setNotificationCount(0));
     };
 
     useEffect(() => {
@@ -89,6 +94,12 @@ const AuthNavbar = () => {
                     >
                         <FiBell className="h-3 w-3 md:w-6 md:h-6" />
                     </button>
+                    {notificationCount > 0 && (
+                        <div className="h-5 w-5 absolute rounded-full bg-red-500 -top-2 -right-2 text-white text-xs font-semibold flex justify-center items-center ">
+                            {notificationCount > 9 ? "9+" : notificationCount}
+                        </div>
+                    )}
+
                     {notificationModal && <NotificationModals />}
                 </div>
 

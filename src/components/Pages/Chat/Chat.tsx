@@ -81,11 +81,15 @@ const Chat = () => {
         console.log("submited");
     };
 
-    const newMessageHandler = useCallback((data: any) => {
-        // console.log(data);
-        // setAllMessage((prev) => [...prev, data.message]);
-        setAllOlderMessage((prev: any) => [...prev, data.message]);
-    }, []);
+    const newMessageHandler = useCallback(
+        (data: any) => {
+            console.log(data);
+            // setAllMessage((prev) => [...prev, data.message]);
+            if (data.chatId !== chatId) return;
+            setAllOlderMessage((prev: any) => [...prev, data.message]);
+        },
+        [chatId]
+    );
 
     const eventArray = { [NEW_MESSAGE]: newMessageHandler };
 
@@ -112,6 +116,15 @@ const Chat = () => {
             }
         }
     };
+
+    useEffect(() => {
+        // refetchOldMessages();
+        return () => {
+            setAllOlderMessage([]);
+            setMessage("");
+            setPage(1);
+        };
+    }, [chatId]);
 
     useEffect(() => {
         if (page >= totalPages) {
@@ -141,12 +154,16 @@ const Chat = () => {
 
     // Inside the useEffect hook for DBandSockectMessages
     useEffect(() => {
-        if (oldMessages) {
-            // setAllMessage((prev) => [...prev, ...oldMessages.messages]);
-            setAllOlderMessage((prev: any) => [
-                ...(oldMessages?.messages || []),
-                ...prev,
-            ]);
+        if (chatDetails?.data?.chat?._id === chatId) {
+            if (oldMessages) {
+                // setAllMessage((prev) => [...prev, ...oldMessages.messages]);
+                setAllOlderMessage((prev: any) => [
+                    ...(oldMessages?.messages || []),
+                    ...prev,
+                ]);
+            }
+        } else {
+            return;
         }
     }, [oldMessages]);
 
@@ -173,7 +190,7 @@ const Chat = () => {
                 <div className="w-full h-full min-h-[89vh] ">
                     {/* message */}
                     <div
-                        className="w-full h-[80vh] min-h-[80vh] overflow-y-auto flex flex-col gap-5 py-5"
+                        className="w-full h-[80vh] min-h-[80vh] overflow-y-auto flex flex-col gap-5 py-5 scrollhost"
                         ref={containerRef}
                     >
                         {!hasMore && (

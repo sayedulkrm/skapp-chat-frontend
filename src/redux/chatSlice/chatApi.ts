@@ -29,7 +29,8 @@ const chatApi = apiSlice.injectEndpoints({
                 };
             },
 
-            providesTags: ["Message"],
+            // providesTags: ["Message"],
+            keepUnusedDataFor: 0,
         }),
 
         // send attachments

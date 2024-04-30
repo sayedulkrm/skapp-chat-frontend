@@ -8,6 +8,7 @@ const initialState = {
 
     // Notifications =================
     notificationModal: false,
+    notificationCount: 0,
 
     // Profile
 
@@ -43,6 +44,10 @@ const navbarSlice = createSlice({
 
         setNotificationModal: (state, action) => {
             state.notificationModal = action.payload;
+        },
+
+        setNotificationCount: (state, action) => {
+            state.notificationCount = action.payload;
         },
 
         // New Group =================================
@@ -95,6 +100,7 @@ export const {
     setIsFileMenu,
     setSeletectedDeleteChat,
     setUploadingLoader,
+    setNotificationCount,
 } = navbarSlice.actions;
 
 export default navbarSlice.reducer;
