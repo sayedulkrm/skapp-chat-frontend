@@ -33,6 +33,7 @@ const Chat = () => {
     const containerRef = useRef<any>(null);
     const scrollRef = useRef<any>(null);
     const [message, setMessage] = useState("");
+    const [newMessage, setNewMessage] = useState<any>([]);
     const [page, setPage] = useState(1);
 
     console.log("HEYYY AM THE PAGE NUMBR ========", page);
@@ -81,15 +82,22 @@ const Chat = () => {
         console.log("submited");
     };
 
-    const newMessageHandler = useCallback(
-        (data: any) => {
-            console.log(data);
-            // setAllMessage((prev) => [...prev, data.message]);
-            if (data.chatId !== chatId) return;
-            setAllOlderMessage((prev: any) => [...prev, data.message]);
-        },
-        [chatId]
-    );
+    console.log("HEYYYYYY IT IS CHAT IDDD", chatId);
+
+    const newMessageHandler = useCallback((data: any) => {
+        console.log("HEYYY ITS FROM NEW MESSAGE  HANDLER====", data);
+        // setAllMessage((prev) => [...prev, data.message]);
+        // 4:27:00 --- video
+
+        console.log("EEE", data.chatId);
+        console.log("EEE", chatId);
+        if (data.chatId !== chatId) {
+            console.log("HEYY I RETURN");
+            return;
+        } else {
+            setNewMessage((prev: any) => [...prev, data.message]);
+        }
+    }, []);
 
     const eventArray = { [NEW_MESSAGE]: newMessageHandler };
 
@@ -118,9 +126,10 @@ const Chat = () => {
     };
 
     useEffect(() => {
-        // refetchOldMessages();
+        refetchOldMessages();
         return () => {
             setAllOlderMessage([]);
+            setNewMessage([]);
             setMessage("");
             setPage(1);
         };
@@ -178,7 +187,7 @@ const Chat = () => {
     useEffect(() => {
         // Scroll to the bottom initially when the page loads
         scrollToBottom();
-    }, [allOlderMessage]);
+    }, [allOlderMessage, newMessage]);
 
     console.log("HAS MOREEE", hasMore);
 
@@ -206,6 +215,11 @@ const Chat = () => {
                         )}
 
                         {allOlderMessage.map((item: any, index: number) => (
+                            <div ref={scrollRef} key={index}>
+                                <MessageComponents message={item} key={index} />
+                            </div>
+                        ))}
+                        {newMessage.map((item: any, index: number) => (
                             <div ref={scrollRef} key={index}>
                                 <MessageComponents message={item} key={index} />
                             </div>

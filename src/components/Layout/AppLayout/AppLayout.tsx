@@ -4,31 +4,30 @@ import { FiList } from "react-icons/fi";
 import Title from "../../Shared/Title";
 import AuthNavbar from "../Navbar/AuthNavbar";
 // import InboxSkeleton from "../Loader/Skeleton/InboxSkeleton";
-import { useParams } from "react-router-dom";
+import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useMyChatsQuery } from "../../../redux/api/apiSlice";
+import { setNotificationCount } from "../../../redux/navbarSlice/navbarSlice";
+import { RootState } from "../../../redux/store";
+import { getSocket } from "../../../socket";
+import { NEW_MESSAGE_ALEART, NEW_REQUEST } from "../../Constants/events";
 import { useErrors, useSocketEvents } from "../../Hooks/Hooks";
 import InboxList from "../../Pages/Chat/InboxList/InboxList";
 import ProfileView from "../../Pages/Chat/ProfileView/ProfileView";
 import InboxSkeleton from "../Loader/Skeleton/InboxSkeleton";
-import { getSocket } from "../../../socket";
-import { NEW_MESSAGE_ALEART, NEW_REQUEST } from "../../Constants/events";
-import { useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setNotificationCount } from "../../../redux/navbarSlice/navbarSlice";
-import { RootState } from "../../../redux/store";
 
 const AppLayout = () => (WrappedComponent: any) => {
     return (props: any) => {
-        const params = useParams();
+        // const params = useParams();
 
         const dispatch = useDispatch();
         const { notificationCount } = useSelector(
             (state: RootState) => state.navbar
         );
 
-        const chatId = params.chatId;
+        // const chatId = params.chatId;
 
-        console.log(chatId);
+        // console.log(chatId);
 
         const {
             isLoading: chatQuerryLoading,

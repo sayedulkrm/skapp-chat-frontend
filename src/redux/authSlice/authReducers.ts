@@ -116,13 +116,13 @@ export const userLogout = createAsyncThunk(
 // google auth
 export const googleAuth = createAsyncThunk(
     "user/google-auth",
-    async (arg, { rejectWithValue }) => {
-        console.log("Heyy am getting called", arg);
+    async (_, { rejectWithValue }) => {
+        // console.log("Heyy am getting called", arg);
         try {
             const { data } = await axios.get(`${server}/google/login/success`, {
                 withCredentials: true,
             });
-            console.log("I am Google Auth ================", data);
+            // console.log("I am Google Auth ================", data);
             return data;
         } catch (error: any) {
             return rejectWithValue(error.response.data);
@@ -166,7 +166,7 @@ export const getUserProfile = createAsyncThunk<
             withCredentials: true,
         });
 
-        console.log(data);
+        // console.log(data);
         return data;
     } catch (error: any) {
         return rejectWithValue(

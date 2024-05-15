@@ -22,7 +22,7 @@ const chatApi = apiSlice.injectEndpoints({
         // get message
         getOldMessages: builder.query({
             query: ({ chatId, page }) => {
-                console.log("Page number", page);
+                // console.log("Page number", page);
                 return {
                     url: `/chat/message/${chatId}?page=${page}`,
                     credentials: "include",
