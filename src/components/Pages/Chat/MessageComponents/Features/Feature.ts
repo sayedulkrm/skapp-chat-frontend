@@ -33,4 +33,24 @@ const transformImage = (url: string, width = 200) => {
     return newUrl;
 };
 
-export { fileFormat, transformImage };
+const getOrSaveFromStorage = ({
+    key,
+    value,
+    get,
+}: {
+    key: string;
+    value?: any;
+    get?: boolean;
+}) => {
+    if (get) {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : null;
+    } else {
+        // Assuming you might want to save the value as well
+        // if (value !== undefined) {
+        localStorage.setItem(key, JSON.stringify(value));
+        // }
+    }
+};
+
+export { fileFormat, transformImage, getOrSaveFromStorage };

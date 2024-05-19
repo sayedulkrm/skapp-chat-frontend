@@ -4,28 +4,35 @@ import { FiList } from "react-icons/fi";
 import Title from "../../Shared/Title";
 import AuthNavbar from "../Navbar/AuthNavbar";
 // import InboxSkeleton from "../Loader/Skeleton/InboxSkeleton";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useMyChatsQuery } from "../../../redux/api/apiSlice";
 import { setNotificationCount } from "../../../redux/navbarSlice/navbarSlice";
 import { RootState } from "../../../redux/store";
-import { getSocket } from "../../../socket";
+import { useSocket } from "../../../socket";
 import { NEW_MESSAGE_ALEART, NEW_REQUEST } from "../../Constants/events";
 import { useErrors, useSocketEvents } from "../../Hooks/Hooks";
 import InboxList from "../../Pages/Chat/InboxList/InboxList";
 import ProfileView from "../../Pages/Chat/ProfileView/ProfileView";
 import InboxSkeleton from "../Loader/Skeleton/InboxSkeleton";
+import { useParams } from "react-router-dom";
+import { setNewMessageAlert } from "../../../redux/chatSlice/chatSlice";
+import { getOrSaveFromStorage } from "../../Pages/Chat/MessageComponents/Features/Feature";
 
 const AppLayout = () => (WrappedComponent: any) => {
     return (props: any) => {
-        // const params = useParams();
+        const params = useParams();
 
         const dispatch = useDispatch();
         const { notificationCount } = useSelector(
             (state: RootState) => state.navbar
         );
 
-        // const chatId = params.chatId;
+        const { newMessageAlert } = useSelector(
+            (state: RootState) => state.chat
+        );
+
+        const chatId = params.chatId;
 
         // console.log(chatId);
 
@@ -38,13 +45,20 @@ const AppLayout = () => (WrappedComponent: any) => {
         } = useMyChatsQuery("");
         // Have to sent the id to redux
 
-        const newMessageAleartHandler = useCallback(() => {}, []);
+        const newMessageAleartHandler = useCallback(
+            (data: any) => {
+                if (data.chatId === chatId) return;
+                dispatch(setNewMessageAlert(data));
+            },
+            [chatId]
+        );
+
         const newRequestNotificationHandler = useCallback(() => {
             dispatch(setNotificationCount(notificationCount + 1));
         }, [dispatch]);
 
         // Adding Socket io
-        const socket = getSocket();
+        const socket = useSocket();
 
         const eventArray = {
             [NEW_MESSAGE_ALEART]: newMessageAleartHandler,
@@ -62,6 +76,13 @@ const AppLayout = () => (WrappedComponent: any) => {
         //     }
         // }, [isError, error]);
 
+        useEffect(() => {
+            getOrSaveFromStorage({
+                key: NEW_MESSAGE_ALEART,
+                value: newMessageAlert,
+            });
+        }, [newMessageAlert]);
+
         return (
             <div className="w-full h-full ">
                 <Title />
@@ -78,10 +99,7 @@ const AppLayout = () => (WrappedComponent: any) => {
                                     {" "}
                                     {Array.from({ length: 10 }).map(
                                         (_, index) => (
-                                            <div
-                                                key={index}
-                                                className="w-full h-full"
-                                            >
+                                            <div key={index} className="">
                                                 <InboxSkeleton />
                                             </div>
                                         )
@@ -101,7 +119,11 @@ const AppLayout = () => (WrappedComponent: any) => {
 
                         {/* Chatpage */}
                         <div className="w-full md:w-8/12 h-full min-h-[92vh]  p-3 dark:bg-slate-950 bg-gray-200">
-                            <WrappedComponent {...props} />
+                            <WrappedComponent
+                                {...props}
+                                chatId={chatId}
+                                key={chatId}
+                            />
                         </div>
                     </div>
                 </div>

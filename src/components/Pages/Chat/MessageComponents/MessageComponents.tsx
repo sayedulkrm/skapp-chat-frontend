@@ -3,6 +3,7 @@ import { fileFormat } from "./Features/Feature";
 import RenderAttachment from "../../../Shared/RenderAttachment";
 import { RootState } from "../../../../redux/store";
 import { useSelector } from "react-redux";
+import { memo } from "react";
 
 const MessageComponents = ({ message }: any) => {
     // console.log(message);
@@ -58,4 +59,4 @@ const MessageComponents = ({ message }: any) => {
     );
 };
 
-export default MessageComponents;
+export default memo(MessageComponents);

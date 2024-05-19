@@ -1,13 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authSliceReducer from "./authSlice/authSlice";
-import navbarSliceReducer from "./navbarSlice/navbarSlice";
-import chatSliceReducer from "./chatSlice/chatSlice";
-import {
-    getUserProfile,
-    googleAuth,
-    updateUserToken,
-} from "./authSlice/authReducers";
 import apiSlice from "./api/apiSlice";
+import authSliceReducer from "./authSlice/authSlice";
+import chatSliceReducer from "./chatSlice/chatSlice";
+import navbarSliceReducer from "./navbarSlice/navbarSlice";
 
 const store = configureStore({
     reducer: {
@@ -30,9 +25,20 @@ const store = configureStore({
 // will call auth fun here
 
 const initializeStore = async () => {
-    await store.dispatch(updateUserToken());
-    await store.dispatch(googleAuth());
-    await store.dispatch(getUserProfile());
+    // await store.dispatch(updateUserToken());
+    // await store.dispatch(googleAuth());
+    // await store.dispatch(getUserProfile());
+
+    await store.dispatch(
+        apiSlice.endpoints.refreshToken.initiate({}, { forceRefetch: true })
+    );
+
+    await store.dispatch(
+        apiSlice.endpoints.googleAuth.initiate({}, { forceRefetch: true })
+    );
+    await store.dispatch(
+        apiSlice.endpoints.loadUser.initiate({}, { forceRefetch: true })
+    );
 };
 
 initializeStore();

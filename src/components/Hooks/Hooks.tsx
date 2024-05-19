@@ -18,7 +18,7 @@ const useErrors = (errors: ErrorObject[] = []) => {
                 }
             }
         });
-    }, []);
+    }, [errors]);
 };
 
 const useAsyncMutaltion = (mutationHook: any) => {
@@ -73,10 +73,10 @@ const useSocketEvents = (socket: any, handlers: any) => {
 
         return () => {
             Object.entries(handlers).forEach(([event, handler]) => {
-                socket.on(event, handler);
+                socket.off(event, handler);
             });
         };
-    }, []);
+    }, [socket, handlers]);
 };
 
 export { useAsyncMutaltion, useErrors, useSocketEvents };

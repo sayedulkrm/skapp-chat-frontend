@@ -5,40 +5,50 @@ import { MdOutlineAttachFile } from "react-icons/md";
 
 import { RiSendPlaneLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import {
     useChatDetailsQuery,
     useGetOldMessagesQuery,
 } from "../../../redux/chatSlice/chatApi";
 import { setOpenAttachmentDialogBox } from "../../../redux/chatSlice/chatSlice";
 import { RootState } from "../../../redux/store";
-import { getSocket } from "../../../socket";
-import { NEW_MESSAGE } from "../../Constants/events";
+import { useSocket } from "../../../socket";
+import {
+    ALERT,
+    NEW_MESSAGE,
+    START_TYPING,
+    STOP_TYPING,
+} from "../../Constants/events";
 import { useErrors, useSocketEvents } from "../../Hooks/Hooks";
 import GlobalLoader from "../../Layout/Loader/GlobalLoader";
 import SpinLoader from "../../Layout/Loader/SpinLoader";
 import FileMenu from "./Dialogs/FileMenu";
 import MessageComponents from "./MessageComponents/MessageComponents";
 
-const Chat = () => {
-    const params = useParams();
-    const chatId = params.chatId;
-    // console.log(chatId);
+const Chat = ({ chatId }: any) => {
+    // const params = useParams();
+    // const chatId = params.chatId;
+    // // console.log(chatId);
 
-    const socket = getSocket();
-
-    const [allOlderMessage, setAllOlderMessage] = useState<any>([]);
+    const socket = useSocket();
 
     // const [allMessage, setAllMessage] = useState<any[]>([]);
     const containerRef = useRef<any>(null);
-    const scrollRef = useRef<any>(null);
+    // const scrollRef = useRef<any>(null);
     const [message, setMessage] = useState("");
+    const [allOlderMessage, setAllOlderMessage] = useState<any>([]);
     const [newMessage, setNewMessage] = useState<any>([]);
     const [page, setPage] = useState(1);
 
-    console.log("HEYYY AM THE PAGE NUMBR ========", page);
+    const [iAmTyping, setIAmTyping] = useState(false);
+    const [userTyping, setUserTyping] = useState(false);
 
-    const [hasMore, setHasMore] = useState(true);
+    const typingTimeOut = useRef<any>(null);
+    const bottomRef = useRef<any>(null);
+
+    // console.log("HEYYY AM THE PAGE NUMBR ========", page);
+
+    // const [hasMore, setHasMore] = useState(true);
 
     const dispatch = useDispatch();
 
@@ -51,14 +61,12 @@ const Chat = () => {
         isLoading: isOldMessagesLoading,
         isError: isOldMessageError,
         error: oldMessageError,
-        refetch: refetchOldMessages,
+        // refetch: refetchOldMessages,
     } = useGetOldMessagesQuery({ chatId, page });
 
     // console.log(oldMessages);
 
     const totalPages = oldMessages?.totalPages;
-
-    console.log("heres total page", totalPages);
 
     const chatDetails = useChatDetailsQuery({ chatId, skip: !chatId });
 
@@ -68,6 +76,24 @@ const Chat = () => {
     ];
 
     const members = chatDetails.data?.chat?.members;
+
+    const handleMessageOnChanges = (e: any) => {
+        setMessage(e.target.value);
+
+        if (!iAmTyping) {
+            socket.emit(START_TYPING, { chatId, members });
+            setIAmTyping(true);
+        }
+
+        if (typingTimeOut.current) {
+            clearTimeout(typingTimeOut.current);
+        }
+
+        typingTimeOut.current = setTimeout(() => {
+            socket.emit(STOP_TYPING, { chatId, members });
+            setIAmTyping(false);
+        }, 2000);
+    };
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -82,33 +108,82 @@ const Chat = () => {
         console.log("submited");
     };
 
-    console.log("HEYYYYYY IT IS CHAT IDDD", chatId);
+    const newMessageHandler = useCallback(
+        (data: any) => {
+            // setAllMessage((prev) => [...prev, data.message]);
+            // 4:27:00 --- video
+            if (data.chatId !== chatId) {
+                console.log("HEYY I RETURN");
+                return;
+            } else {
+                setNewMessage((prev: any) => [...prev, data.message]);
+            }
+        },
+        [chatId]
+    );
 
-    const newMessageHandler = useCallback((data: any) => {
-        console.log("HEYYY ITS FROM NEW MESSAGE  HANDLER====", data);
-        // setAllMessage((prev) => [...prev, data.message]);
-        // 4:27:00 --- video
+    const startTypingListenerHandler = useCallback(
+        (data: any) => {
+            // setAllMessage((prev) => [...prev, data.message]);
+            // 5:00:00 --- video
+            if (data.chatId !== chatId) {
+                return;
+            }
 
-        console.log("EEE", data.chatId);
-        console.log("EEE", chatId);
-        if (data.chatId !== chatId) {
-            console.log("HEYY I RETURN");
-            return;
-        } else {
-            setNewMessage((prev: any) => [...prev, data.message]);
-        }
-    }, []);
+            setUserTyping(true);
+        },
+        [chatId]
+    );
 
-    const eventArray = { [NEW_MESSAGE]: newMessageHandler };
+    const stopTypingListenerHandler = useCallback(
+        (data: any) => {
+            // setAllMessage((prev) => [...prev, data.message]);
+            // 5:00:00 --- video
+            if (data.chatId !== chatId) {
+                return;
+            }
+
+            setUserTyping(false);
+        },
+        [chatId]
+    );
+
+    const alertListener = useCallback(
+        (data: any) => {
+            // 5:20:00 --- video
+
+            const messageForAlert = {
+                content: data,
+
+                sender: {
+                    _id: Math.random(), //user.id,
+                    name: "Admin", //user.name
+                },
+                chatId,
+
+                createdAt: new Date().toISOString(),
+            };
+
+            setNewMessage((prev: any) => [...prev, messageForAlert]);
+        },
+        [chatId]
+    );
+
+    const eventArray = {
+        [NEW_MESSAGE]: newMessageHandler,
+        [ALERT]: alertListener,
+        [START_TYPING]: startTypingListenerHandler,
+        [STOP_TYPING]: stopTypingListenerHandler,
+    };
 
     useSocketEvents(socket, eventArray);
 
     useErrors(errors);
 
-    // const DBandSockectMessages = [
-    //     ...(oldMessages?.messages || []),
-    //     ...allMessage,
-    // ];
+    const DBandSockectMessages = [
+        // ...(oldMessages?.messages || []),
+        ...allOlderMessage,
+    ];
 
     const handleInfiniteScroll = () => {
         if (containerRef.current) {
@@ -118,28 +193,31 @@ const Chat = () => {
             // Check if user has scrolled close to the top and there are more pages available
             if (scrollTop < threshold && !isOldMessagesLoading && hasMore) {
                 console.log("User has reached the top, loading more messages");
-                refetchOldMessages();
+                // refetchOldMessages();
 
                 setPage((prevPage) => prevPage + 1); // Increment page number
             }
         }
     };
 
-    useEffect(() => {
-        refetchOldMessages();
-        return () => {
-            setAllOlderMessage([]);
-            setNewMessage([]);
-            setMessage("");
-            setPage(1);
-        };
-    }, [chatId]);
+    // it can be done like this
+    const hasMore = !(page >= totalPages);
 
-    useEffect(() => {
-        if (page >= totalPages) {
-            setHasMore(false);
-        }
-    }, [page, totalPages]);
+    // useEffect(() => {
+    //     // refetchOldMessages();
+    //     return () => {
+    //         setAllOlderMessage([]);
+    //         setNewMessage([]);
+    //         setMessage("");
+    //         setPage(1);
+    //     };
+    // }, [chatId]);
+
+    // useEffect(() => {
+    //     if (page >= totalPages) {
+    //         setHasMore(false);
+    //     }
+    // }, [page, totalPages]);
 
     useEffect(() => {
         // Add event listener for scroll event on the container
@@ -178,18 +256,31 @@ const Chat = () => {
 
     // Function to scroll the chat to the bottom
     const scrollToBottom = () => {
-        if (scrollRef.current) {
+        if (bottomRef.current) {
             // containerRef.current.scrollTop = containerRef.current.scrollHeight;
-            scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+            bottomRef.current?.scrollIntoView({ behavior: "smooth" });
         }
     };
+
+    // const scrollToBottomSecound = () => {
+    //     if (containerRef.current) {
+    //         const { scrollTop, scrollHeight, clientHeight } =
+    //             containerRef.current;
+    //         const bottomThreshold =
+    //             scrollHeight - clientHeight - clientHeight / 3;
+
+    //         if (scrollTop >= bottomThreshold) {
+    //             scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    //         }
+    //     }
+    // };
 
     useEffect(() => {
         // Scroll to the bottom initially when the page loads
         scrollToBottom();
     }, [allOlderMessage, newMessage]);
 
-    console.log("HAS MOREEE", hasMore);
+    useEffect(() => {}, []);
 
     return (
         <>
@@ -199,7 +290,7 @@ const Chat = () => {
                 <div className="w-full h-full min-h-[89vh] ">
                     {/* message */}
                     <div
-                        className="w-full h-[80vh] min-h-[80vh] overflow-y-auto flex flex-col gap-5 py-5 scrollhost"
+                        className="w-full h-[80vh] min-h-[80vh] overflow-y-auto flex flex-col gap-5 py-5 "
                         ref={containerRef}
                     >
                         {!hasMore && (
@@ -214,16 +305,33 @@ const Chat = () => {
                             </div>
                         )}
 
-                        {allOlderMessage.map((item: any, index: number) => (
-                            <div ref={scrollRef} key={index}>
-                                <MessageComponents message={item} key={index} />
-                            </div>
-                        ))}
+                        {DBandSockectMessages.map(
+                            (item: any, index: number) => (
+                                <div key={index}>
+                                    <MessageComponents
+                                        message={item}
+                                        key={index}
+                                    />
+                                </div>
+                            )
+                        )}
                         {newMessage.map((item: any, index: number) => (
-                            <div ref={scrollRef} key={index}>
+                            <div key={index}>
                                 <MessageComponents message={item} key={index} />
                             </div>
                         ))}
+
+                        {userTyping && (
+                            // <div className="flex flex-col gap-3">
+                            <div className="lds-ellipsis">
+                                <div className="bg-gray-300 dark:bg-white"></div>
+                                <div className="bg-gray-300 dark:bg-white"></div>
+                                <div className="bg-gray-300 dark:bg-white"></div>
+                                <div className="bg-gray-300 dark:bg-white"></div>
+                            </div>
+                            // </div>
+                        )}
+                        <div ref={bottomRef} />
                     </div>
 
                     {/* Input */}
@@ -234,7 +342,7 @@ const Chat = () => {
                     >
                         <textarea
                             value={message}
-                            onChange={(e) => setMessage(e.target.value)}
+                            onChange={handleMessageOnChanges}
                             // onKeyDown={handleKeyDown}
 
                             placeholder="Type something..."

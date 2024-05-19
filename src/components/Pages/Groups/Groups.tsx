@@ -11,12 +11,18 @@ import ToolTip from "../../Utils/ToolTip";
 import GroupsList from "./GroupsList";
 import AddMembersToGroup from "./Modals/AddMembersToGroup";
 import ConfirmDelete from "./Modals/ConfirmDelete";
+import { useMyGroupChatsQuery } from "../../../redux/api/apiSlice";
+import { useErrors } from "../../Hooks/Hooks";
+import { toast } from "react-toastify";
+import InboxSkeleton from "../../Layout/Loader/Skeleton/InboxSkeleton";
 
 const Groups = () => {
     const navigate = useNavigate();
     const chatId = useSearchParams()[0].get("group");
 
     const dispatch = useDispatch();
+
+    const myGroups = useMyGroupChatsQuery("");
 
     const users: any = [
         {
@@ -103,6 +109,20 @@ const Groups = () => {
         dispatch(setOpenAddMembersBox(true));
     };
 
+    const errors = [
+        {
+            isError: myGroups.isError,
+            error: myGroups.error,
+            // fallback: () => {
+            //     toast.error(
+            //         myGroups.error?.data?.message || "Something went wrong"
+            //     );
+            // }
+        },
+    ];
+
+    useErrors(errors);
+
     const ButtonGroup = (
         <div className="w-full flex items-center justify-between p-2 gap-5">
             <button
@@ -137,7 +157,18 @@ const Groups = () => {
         <div className="w-full h-full">
             <div className="w-full h-full grid min-h-screen grid-cols-3 ">
                 <div className="dark:bg-slate-950 bg-gray-200 col-span-1 p-3">
-                    <GroupsList />
+                    {myGroups.isLoading ? (
+                        <>
+                            {" "}
+                            {Array.from({ length: 10 }).map((_, index) => (
+                                <div key={index} className="">
+                                    <InboxSkeleton />
+                                </div>
+                            ))}
+                        </>
+                    ) : (
+                        <GroupsList />
+                    )}
                 </div>
 
                 <div className="col-span-2 p-3">
