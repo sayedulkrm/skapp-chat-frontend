@@ -7,6 +7,9 @@ import {
     setSearchPeople,
 } from "../../../../redux/navbarSlice/navbarSlice";
 import { RootState } from "../../../../redux/store";
+import { useAvailableFriendsQuery } from "../../../../redux/api/apiSlice";
+import { useErrors } from "../../../Hooks/Hooks";
+import InboxSkeleton from "../../Loader/Skeleton/InboxSkeleton";
 
 const NewGroupModals = () => {
     const dispatch = useDispatch();
@@ -14,25 +17,18 @@ const NewGroupModals = () => {
     const { newGroupModal, searchPeople, newGroupName, newGroupPeoples } =
         useSelector((state: RootState) => state.navbar);
 
-    const users: any = [
-        {
-            _id: 124353,
-            avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
-            name: "John Doe",
-        },
+    const { isError, isLoading, error, data } = useAvailableFriendsQuery("");
 
+    const errors = [
         {
-            _id: 124366345453,
-            avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
-            name: "Jack Doe",
-        },
-
-        {
-            _id: 126678453,
-            avatar: "https://sb.kaleidousercontent.com/67418/960x550/d1e78c2a25/individuals-a.png",
-            name: "Sam Doe",
+            isError,
+            error,
         },
     ];
+
+    console.log("hey am from new group", data);
+
+    useErrors(errors);
 
     const selectMemeberHandler = (user: any) => {
         dispatch(setNewGroupPeoples(user));
@@ -57,6 +53,10 @@ const NewGroupModals = () => {
     //   };
 
     // Friend Reqest Handler
+
+    const submitHandler = () => {
+        console.log(newGroupName, newGroupPeoples);
+    };
 
     return (
         <div
@@ -95,34 +95,46 @@ const NewGroupModals = () => {
                                 New Group
                             </h1>
 
-                            {users?.length > 0 ? (
-                                <div className="w-full h-full flex flex-col gap-3">
-                                    <h1 className="text-2xl">Find People</h1>
-                                    <input
-                                        type="text"
-                                        value={searchPeople}
-                                        className="border-2 focus:border-blue-400 bg-transparent rounded-md text-sm px-4 py-2"
-                                        onChange={(e) =>
-                                            dispatch(
-                                                setSearchPeople(e.target.value)
-                                            )
-                                        }
-                                    />
+                            {/* {users?.length > 0 ? ( */}
+                            <div className="w-full h-full flex flex-col gap-3">
+                                <h1 className="text-2xl">Find People</h1>
+                                <input
+                                    type="text"
+                                    value={searchPeople}
+                                    className="border-2 focus:border-blue-400 bg-transparent rounded-md text-sm px-4 py-2"
+                                    onChange={(e) =>
+                                        dispatch(
+                                            setSearchPeople(e.target.value)
+                                        )
+                                    }
+                                />
 
-                                    <h1 className="text-2xl">Group Name</h1>
-                                    <input
-                                        type="text"
-                                        value={newGroupName}
-                                        className="border-2 focus:border-blue-400 bg-transparent rounded-md text-sm px-4 py-2"
-                                        onChange={(e) =>
-                                            dispatch(
-                                                setGroupName(e.target.value)
-                                            )
-                                        }
-                                    />
+                                <h1 className="text-2xl">Group Name</h1>
+                                <input
+                                    type="text"
+                                    value={newGroupName}
+                                    className="border-2 focus:border-blue-400 bg-transparent rounded-md text-sm px-4 py-2"
+                                    onChange={(e) =>
+                                        dispatch(setGroupName(e.target.value))
+                                    }
+                                />
 
-                                    <div className="my-5 w-full h-full max-h-[260px] overflow-y-auto flex flex-col gap-5 scrollhost">
-                                        {users?.map((user: any) => {
+                                <div className="my-5 w-full h-full max-h-[260px] overflow-y-auto flex flex-col gap-5 scrollhost">
+                                    {isLoading ? (
+                                        <div>
+                                            {Array.from({ length: 5 }).map(
+                                                (_, index) => (
+                                                    <div
+                                                        key={index}
+                                                        className=""
+                                                    >
+                                                        <InboxSkeleton />
+                                                    </div>
+                                                )
+                                            )}
+                                        </div>
+                                    ) : (
+                                        data?.friends?.map((user: any) => {
                                             const { name, _id, avatar } = user;
 
                                             return (
@@ -171,23 +183,27 @@ const NewGroupModals = () => {
                                                     </button>
                                                 </div>
                                             );
-                                        })}
-                                    </div>
-
-                                    <div className="w-full flex justify-between items-center ">
-                                        <button className="px-4 py-2 rounded-md bg-red-500  text-white">
-                                            Cancel
-                                        </button>
-                                        <button className="px-4 py-2 rounded-md bg-cyan-400 text-white">
-                                            Create
-                                        </button>
-                                    </div>
+                                        })
+                                    )}
                                 </div>
-                            ) : (
+
+                                <div className="w-full flex justify-between items-center ">
+                                    <button className="px-4 py-2 rounded-md bg-red-500  text-white">
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={submitHandler}
+                                        className="px-4 py-2 rounded-md bg-cyan-400 text-white"
+                                    >
+                                        Create
+                                    </button>
+                                </div>
+                            </div>
+                            {/* ) : (
                                 <p className="w-full h-full flex justify-center items-center my-5 text-xl">
                                     No Notifications
                                 </p>
-                            )}
+                            )} */}
                         </div>
                     </div>
                 </section>

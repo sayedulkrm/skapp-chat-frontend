@@ -3,22 +3,23 @@ import { FiEdit, FiSave } from "react-icons/fi";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useMyGroupChatsQuery } from "../../../redux/api/apiSlice";
 import {
     setOpenAddMembersBox,
     setOpenConfirmDeleteGroupBox,
 } from "../../../redux/chatSlice/chatSlice";
+import { useErrors } from "../../Hooks/Hooks";
+import InboxSkeleton from "../../Layout/Loader/Skeleton/InboxSkeleton";
 import ToolTip from "../../Utils/ToolTip";
 import GroupsList from "./GroupsList";
 import AddMembersToGroup from "./Modals/AddMembersToGroup";
 import ConfirmDelete from "./Modals/ConfirmDelete";
-import { useMyGroupChatsQuery } from "../../../redux/api/apiSlice";
-import { useErrors } from "../../Hooks/Hooks";
-import { toast } from "react-toastify";
-import InboxSkeleton from "../../Layout/Loader/Skeleton/InboxSkeleton";
 
 const Groups = () => {
     const navigate = useNavigate();
     const chatId = useSearchParams()[0].get("group");
+
+    console.log("GROUP CHAT ID", chatId);
 
     const dispatch = useDispatch();
 

@@ -73,6 +73,8 @@ const apiSlice = createApi({
             providesTags: ["Chat"],
         }),
 
+        // Group
+
         myGroupChats: builder.query({
             query: () => ({
                 url: "/chat/my/groups",
@@ -80,6 +82,23 @@ const apiSlice = createApi({
                 credentials: "include",
             }),
             // here we use tags for fetching data againg. Because RTK default behaviour is cached and if we don't use the tags we cant see the latest data
+            providesTags: ["Chat"],
+        }),
+
+        // get chatDetails
+        availableFriends: builder.query({
+            query: (chatId) => {
+                let url = `/user/friends`;
+
+                if (chatId) url += `?chatId=${chatId}`;
+
+                return {
+                    url,
+                    method: "GET",
+                    credentials: "include",
+                };
+            },
+
             providesTags: ["Chat"],
         }),
     }),
@@ -91,6 +110,7 @@ export const {
     useGoogleAuthQuery,
     useMyChatsQuery,
     useMyGroupChatsQuery,
+    useAvailableFriendsQuery,
 } = apiSlice;
 
 export default apiSlice;
