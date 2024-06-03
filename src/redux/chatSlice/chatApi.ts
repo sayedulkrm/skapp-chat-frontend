@@ -43,6 +43,23 @@ const chatApi = apiSlice.injectEndpoints({
                 body: data,
             }),
         }),
+
+        // send attachments
+
+        newGroup: builder.mutation({
+            query: ({ name, members }) => {
+                console.log("AM from RTK", name, members);
+
+                return {
+                    url: "/chat/new/group-chat",
+                    method: "POST",
+                    credentials: "include",
+                    body: { name, members },
+                };
+            },
+
+            invalidatesTags: ["Chat"],
+        }),
     }),
 });
 
@@ -50,6 +67,7 @@ export const {
     useChatDetailsQuery,
     useGetOldMessagesQuery,
     useSendAttachmentsMutation,
+    useNewGroupMutation,
 } = chatApi;
 
 export default chatApi;

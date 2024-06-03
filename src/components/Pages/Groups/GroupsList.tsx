@@ -1,54 +1,19 @@
 import { Link, useSearchParams } from "react-router-dom";
 import AvatarGroup from "../Chat/InboxList/AvatarGroup";
 import { memo } from "react";
+import { useMyGroupChatsQuery } from "../../../redux/api/apiSlice";
 
 const GroupsList = () => {
     const chatId = useSearchParams()[0].get("group");
 
     console.log(chatId);
 
-    const myGroups: any[] = [
-        {
-            _id: 122,
-            avatar: [
-                "https://pikwizard.com/pw/small/efd4c9d04f7a3555c1bb8699869ace60.jpg",
-                "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
-                "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
-                "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
-                "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
-                "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
-            ],
-            name: "My group",
-            lastMessage: "Hello, How are you?",
-            groupChat: false,
-            members: ["234", "432"],
-            isOnline: true,
-            sameSender: false,
-        },
-
-        {
-            _id: 14522,
-            avatar: [
-                "https://pikwizard.com/pw/small/efd4c9d04f7a3555c1bb8699869ace60.jpg",
-                "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
-                "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
-                "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
-                "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
-                "https://www.codespeedy.com/wp-content/uploads/2020/01/test-1.jpg",
-            ],
-            name: "Not my group",
-            lastMessage: "Hello, How are you?",
-            groupChat: false,
-            members: ["234", "432"],
-            isOnline: true,
-            sameSender: false,
-        },
-    ];
+    const myGroups = useMyGroupChatsQuery("");
 
     return (
         <div className="w-full h-full">
-            {myGroups?.length > 0 ? (
-                myGroups?.map((item) => {
+            {myGroups?.data?.groups?.length > 0 ? (
+                myGroups?.data?.groups?.map((item: any) => {
                     return (
                         <GroupListItem
                             group={item}
@@ -66,6 +31,8 @@ const GroupsList = () => {
 
 const GroupListItem = memo(({ group, chatId }: any) => {
     const { name, avatar, _id } = group;
+
+    console.log(group);
 
     // console.log("am from listitem", chatId);
 

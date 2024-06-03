@@ -4,18 +4,24 @@ import {
     setGroupName,
     setNewGroupModal,
     setNewGroupPeoples,
+    setNewGroupPeoplesEmpty,
     setSearchPeople,
 } from "../../../../redux/navbarSlice/navbarSlice";
 import { RootState } from "../../../../redux/store";
 import { useAvailableFriendsQuery } from "../../../../redux/api/apiSlice";
-import { useErrors } from "../../../Hooks/Hooks";
+import { useAsyncMutaltion, useErrors } from "../../../Hooks/Hooks";
 import InboxSkeleton from "../../Loader/Skeleton/InboxSkeleton";
+import { toast } from "react-toastify";
+import { useNewGroupMutation } from "../../../../redux/chatSlice/chatApi";
 
 const NewGroupModals = () => {
     const dispatch = useDispatch();
 
     const { newGroupModal, searchPeople, newGroupName, newGroupPeoples } =
         useSelector((state: RootState) => state.navbar);
+
+    const [newGroup, isLoadingNewGroup] =
+        useAsyncMutaltion(useNewGroupMutation);
 
     const { isError, isLoading, error, data } = useAvailableFriendsQuery("");
 
@@ -25,8 +31,6 @@ const NewGroupModals = () => {
             error,
         },
     ];
-
-    console.log("hey am from new group", data);
 
     useErrors(errors);
 
@@ -54,8 +58,24 @@ const NewGroupModals = () => {
 
     // Friend Reqest Handler
 
+    const closeHandler = () => {
+        dispatch(setNewGroupModal(false));
+        dispatch(setGroupName(""));
+        dispatch(setNewGroupPeoplesEmpty([]));
+    };
+
     const submitHandler = () => {
-        console.log(newGroupName, newGroupPeoples);
+        if (newGroupName === "") return toast.error("Group Name is required");
+
+        if (newGroupPeoples.length < 2)
+            return toast.error("Add atleast 2 people");
+
+        newGroup("Creating New Group", {
+            name: newGroupName,
+            members: newGroupPeoples,
+        });
+
+        closeHandler();
     };
 
     return (
@@ -80,9 +100,7 @@ const NewGroupModals = () => {
                         <div className="w-full">
                             <button
                                 className="px-4 py-2 border text-white font-bold rounded-md text-xl transition-transform transform-gpu hover:-translate-y-1 hover:shadow-lg"
-                                onClick={() =>
-                                    dispatch(setNewGroupModal(false))
-                                }
+                                onClick={closeHandler}
                             >
                                 <IoCloseSharp />
                             </button>
@@ -188,14 +206,20 @@ const NewGroupModals = () => {
                                 </div>
 
                                 <div className="w-full flex justify-between items-center ">
-                                    <button className="px-4 py-2 rounded-md bg-red-500  text-white">
+                                    <button
+                                        onClick={closeHandler}
+                                        className="px-4 py-2 rounded-md bg-red-500  text-white"
+                                    >
                                         Cancel
                                     </button>
                                     <button
                                         onClick={submitHandler}
+                                        disabled={isLoadingNewGroup}
                                         className="px-4 py-2 rounded-md bg-cyan-400 text-white"
                                     >
-                                        Create
+                                        {isLoadingNewGroup
+                                            ? "Loading..."
+                                            : "Create"}
                                     </button>
                                 </div>
                             </div>

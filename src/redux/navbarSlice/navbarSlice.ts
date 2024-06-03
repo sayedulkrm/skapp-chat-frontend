@@ -71,6 +71,10 @@ const navbarSlice = createSlice({
             }
         },
 
+        setNewGroupPeoplesEmpty: (state, action) => {
+            state.newGroupPeoples = action.payload;
+        },
+
         setGroupName: (state, action) => {
             state.newGroupName = action.payload;
         },
@@ -95,6 +99,7 @@ export const {
     setNotificationModal,
     setNewGroupModal,
     setNewGroupPeoples,
+    setNewGroupPeoplesEmpty,
     setGroupName,
     setIsDeleteMenu,
     setIsFileMenu,
